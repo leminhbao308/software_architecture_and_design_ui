@@ -105,12 +105,18 @@ const LoginPage = () => {
                             </div>
 
                             <div className="mb-2 d-flex justify-content-center fs-6">
-                                <button type="submit" className="btn btn-outline-primary rounded-5 w-25">Đăng Nhập</button>
+                                <button type="submit" className="btn btn-outline-primary rounded-5 w-50">Đăng Nhập</button>
+                            </div>
+
+                            <div className="mb-3 d-flex justify-content-center fs-6">
+                                <hr className={"w-25 me-1"}/>
+                                Hoặc
+                                <hr className={"w-25 ms-1"}/>
                             </div>
 
                             <div className="mb-5 d-flex justify-content-center fs-6">
                                 <button
-                                    type="button" className="btn btn-outline-primary rounded-5 w-75"
+                                    type="button" className="btn btn-outline-primary rounded-5 w-50"
                                     onClick={handleGoogleLogin}
                                 >
                                     <i className="bi bi-google mx-2"></i>
