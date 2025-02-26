@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import Logo from "../../assets/devicer-white.png";
 const Header = () => {
   return (
@@ -7,7 +8,7 @@ const Header = () => {
           <img src={Logo} alt="logo devicer store" title="logo devicer store" />
         </div>
         <div className="header-action">
-          <a href="#">SignUp</a>
+          <Link to="signup">SignUp</Link>
         </div>
       </div>
     </header>

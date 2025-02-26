@@ -28,9 +28,13 @@
     padding-top: 40%;
 }
 
+.form.form-signup {
+    padding: 30px 30px 8px 30px;
+}
+
 .form {
     width: 100%;
-    padding: 70px  30px 40px 30px;
+    padding: 70px 30px 40px 30px;
     border-radius: 8px;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
 }
