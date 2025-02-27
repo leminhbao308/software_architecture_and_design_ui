@@ -3,13 +3,13 @@ import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import PathConst from "../consts/PathConst";
 import LoginService from "../services/auth/LoginService";
+import AssetsConstant from "../consts/AssetsConstant";
 
 const LoginPage = () => {
   const [username, setUsername] = useState(""); //  username or email
   const [password, setPassword] = useState(""); //  password
   const [isRememberSession, setRememberSession] = useState(false); //  true is remember, false is not
   const [errorMessage, setErrorMessage] = useState(""); // handle throw error
-
   const [validated, setValidated] = useState(false); //  check form validation
 
   const navigate = useNavigate();
@@ -45,17 +45,18 @@ const LoginPage = () => {
 
     try {
       const response = await LoginService.login(username, password);
-      console.log("Đăng nhập thành công, token:", response.token);
+      // console.log("Đăng nhập thành công, token:", response.access_token);
 
       // Lưu token vào localStorage nếu "Nhớ phiên đăng nhập" được chọn
-      if (isRememberSession) {
-        localStorage.setItem("authToken", response.token);
-      } else {
-        sessionStorage.setItem("authToken", response.token); 
+      if (response.access_token) {
+        if (isRememberSession) {
+          localStorage.setItem("access_token", response.access_token);
+        } else {
+          sessionStorage.setItem("access_token", response.access_token); 
+        }
+        // Chuyển hướng sau khi đăng nhập thành công
+        navigate(PathConst.HOME);
       }
-
-      // Chuyển hướng sau khi đăng nhập thành công
-      navigate(PathConst.HOME);
     } catch (error) {
       setErrorMessage(
         "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin!" + error
@@ -76,7 +77,7 @@ const LoginPage = () => {
           <div className={"intro"}>
             <span>Welcome To</span>
             <img
-              src={logo}
+              src={AssetsConstant.BLACK_LOGO}
               alt={"logo"}
               className={"d-flex justify-content-center align-items-center"}
             />

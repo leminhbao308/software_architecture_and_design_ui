@@ -1,6 +1,7 @@
 import logo from "../assets/devicer-black.png";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import AssetsConstant from "../consts/AssetsConstant";
 
 const SignUpPage = () => {
   const [username, setUsername] = useState(""); //  username
@@ -58,7 +59,7 @@ const SignUpPage = () => {
           <div className={"intro"}>
             <span>Welcome To</span>
             <img
-              src={logo}
+              src={AssetsConstant.BLACK_LOGO}
               alt={"logo"}
               className={"d-flex justify-content-center align-items-center"}
             />

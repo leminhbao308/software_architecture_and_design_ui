@@ -1,8 +1,16 @@
-import { Link, useLocation } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/devicer-white.png";
 import PathConst from "../../consts/PathConst";
+import { isAuthenticated, logout } from "../../services/auth/AuthService";
+
 const Header = () => {
   const location = useLocation();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate(PathConst.LOGIN, { replace: true });
+  };
 
   return (
     <header className="header">
@@ -17,11 +25,14 @@ const Header = () => {
           </Link>
         </div>
         <div className="header-action">
-          {/* Hangdle show Link by path login or signup */}
-          {location.pathname === PathConst.LOGIN ? (
-            <Link to={PathConst.SIGNUP}>SignUp</Link>
+          {isAuthenticated() ? (
+            <button className="btn-logout" onClick={handleLogout}>
+              Log Out
+            </button>
+          ) : location.pathname === PathConst.LOGIN ? (
+            <Link to={PathConst.SIGNUP}>Sign Up</Link>
           ) : (
-            <Link to={PathConst.LOGIN}>LogIn</Link>
+            <Link to={PathConst.LOGIN}>Log In</Link>
           )}
         </div>
       </div>

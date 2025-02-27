@@ -1,7 +1,9 @@
+/* header */
 .header {
     width: 100%;
     background-color: var(--header-bg-color);
     position: fixed;
+    top: 0;
 }
 
 .header-logo,
@@ -16,6 +18,15 @@
 .header-action a {
     color: var(--white-text-color);
     text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.header .header-action .btn-logout {
+    background: none;
+    border: none;
+    outline: none;
+    color: var(--white-text-color);
     font-size: 16px;
     font-weight: 600;
 }
@@ -75,4 +86,29 @@
 
 .form .form-group .form-control.form-control--custom:hover {
     box-shadow: #a3b1ff 0px 5px 15px;
+}
+
+/* home page */
+.home-intro {
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.home-intro span {
+    letter-spacing: 10px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    font-size: 38px;
+}
+
+
+.home-intro a {
+    width: 100%;
+}
+
+.home-intro img {
+    width: 70%;
+    margin: 0 auto;
 }
