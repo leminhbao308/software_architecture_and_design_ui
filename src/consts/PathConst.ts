@@ -5,6 +5,7 @@ const PathConst = {
   SIGNUP: "/signup",
   DASHBOARD: "/dashboard",
   PROFILE: "/profile",
+  FORGOT_PASSWORD: "/forgot-password"
 };
 
 export default PathConst;

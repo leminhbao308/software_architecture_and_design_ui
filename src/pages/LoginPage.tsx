@@ -1,6 +1,7 @@
 import logo from "../assets/devicer-black.png";
 import { Link } from "react-router-dom";
 import { useState } from "react";
+import PathConst from "../consts/PathConst";
 
 const LoginPage = () => {
   const [username, setUsername] = useState(""); //  username or email
@@ -49,9 +50,8 @@ const LoginPage = () => {
       <div className={"row min-vh-100"}>
         <div className={"col-7"}>
           <div className={"intro"}>
-            <span className="fs-1 fw-semibold mb-2">Welcome To</span>
+            <span>Welcome To</span>
             <img
-              width={"70%"}
               src={logo}
               alt={"logo"}
               className={"d-flex justify-content-center align-items-center"}
@@ -112,7 +112,10 @@ const LoginPage = () => {
                   Nhớ phiên đăng nhập
                 </label>
               </div>
-              <Link to={"/forgot-password"} className="text-decoration-none">
+              <Link
+                to={PathConst.FORGOT_PASSWORD}
+                className="text-decoration-none"
+              >
                 Quên mật khẩu
               </Link>
             </div>

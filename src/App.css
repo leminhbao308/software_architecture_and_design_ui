@@ -28,6 +28,18 @@
     padding-top: 40%;
 }
 
+.intro span {
+    letter-spacing: 10px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    font-size: 38px;
+}
+
+.intro img {
+    width: 70%;
+}
+
+
 .form.form-signup {
     margin-top: 14%;
     padding: 30px 30px 8px 30px;

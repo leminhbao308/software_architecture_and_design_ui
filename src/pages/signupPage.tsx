@@ -56,9 +56,8 @@ const SignUpPage = () => {
       <div className={"row min-vh-100"}>
         <div className={"col-7"}>
           <div className={"intro"}>
-            <span className="fs-1 fw-semibold mb-2">Welcome To</span>
+            <span>Welcome To</span>
             <img
-              width={"70%"}
               src={logo}
               alt={"logo"}
               className={"d-flex justify-content-center align-items-center"}
