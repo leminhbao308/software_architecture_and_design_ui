@@ -12,7 +12,7 @@ const SignUpPage = () => {
   const [validated, setValidated] = useState(false); //  check form validation
 
   function onValueChange(e) {
-    const { id, value} = e.target;
+    const { id, value } = e.target;
 
     switch (id) {
       case "username":
@@ -70,7 +70,7 @@ const SignUpPage = () => {
           <form
             className={`form form-signup needs-validation ${
               validated ? "was-validated" : ""
-            } mt-5`}
+            }`}
             noValidate
             onSubmit={handleSubmit}
           >
@@ -78,11 +78,11 @@ const SignUpPage = () => {
 
             <div className="form-group">
               <label htmlFor="username" className="form-label fs-6 fw-regular">
-                Username *
+                Username <span className="text-primary">*</span>
               </label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control form-control--custom"
                 required
                 id="username"
                 value={username}
@@ -93,11 +93,11 @@ const SignUpPage = () => {
 
             <div className="form-group">
               <label htmlFor="email" className="form-label fs-6 fw-regular">
-                Email *
+                Email <span className="text-primary">*</span>
               </label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control form-control--custom"
                 required
                 id="email"
                 value={email}
@@ -108,11 +108,11 @@ const SignUpPage = () => {
 
             <div className="form-group">
               <label htmlFor="phone" className="form-label fs-6 fw-regular">
-                Phone *
+                Phone <span className="text-primary">*</span>
               </label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control form-control--custom"
                 required
                 id="phone"
                 value={phone}
@@ -123,11 +123,11 @@ const SignUpPage = () => {
 
             <div className="form-group">
               <label htmlFor="password" className="form-label fs-6 fw-regular">
-                Mật khẩu *
+                Mật khẩu <span className="text-primary">*</span>
               </label>
               <input
                 type="password"
-                className="form-control"
+                className="form-control form-control--custom"
                 required
                 id="password"
                 value={password}
@@ -141,11 +141,11 @@ const SignUpPage = () => {
                 htmlFor="confirmPassword"
                 className="form-label fs-6 fw-regular"
               >
-                Xác Nhận Mật khẩu *
+                Xác Nhận Mật khẩu <span className="text-primary">*</span>
               </label>
               <input
                 type="password"
-                className="form-control"
+                className="form-control form-control--custom"
                 required
                 id="confirmPassword"
                 value={confirmPassword}

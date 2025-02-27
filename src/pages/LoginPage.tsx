@@ -48,11 +48,7 @@ const LoginPage = () => {
     <div className={"container"}>
       <div className={"row min-vh-100"}>
         <div className={"col-7"}>
-          <div
-            className={
-              "intro"
-            }
-          >
+          <div className={"intro"}>
             <span className="fs-1 fw-semibold mb-2">Welcome To</span>
             <img
               width={"70%"}
@@ -65,7 +61,9 @@ const LoginPage = () => {
 
         <div className={"col-5 d-flex  align-items-center"}>
           <form
-            className={`form needs-validation ${validated ? "was-validated" : ""}`}
+            className={`form needs-validation ${
+              validated ? "was-validated" : ""
+            }`}
             noValidate
             onSubmit={handleSubmit}
           >
@@ -73,11 +71,11 @@ const LoginPage = () => {
 
             <div className="form-group">
               <label htmlFor="username" className="form-label fs-6 fw-regular">
-                Username hoặc email *
+                Username hoặc email <span className="text-primary">*</span>
               </label>
               <input
                 type="text"
-                className="form-control"
+                className="form-control form-control--custom"
                 required
                 id="username"
                 value={username}
@@ -88,11 +86,11 @@ const LoginPage = () => {
 
             <div className="form-group">
               <label htmlFor="password" className="form-label fs-6 fw-regular">
-                Mật khẩu *
+                Mật khẩu <span className="text-primary">*</span>
               </label>
               <input
                 type="password"
-                className="form-control"
+                className="form-control form-control--custom"
                 required
                 id="password"
                 value={password}

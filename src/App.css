@@ -29,6 +29,7 @@
 }
 
 .form.form-signup {
+    margin-top: 14%;
     padding: 30px 30px 8px 30px;
 }
 
@@ -49,4 +50,17 @@
 
 .form .form-group {
     margin-bottom: 20px;
+}
+
+.form.form-signup .form-group {
+    margin-bottom: 12px;
+}
+
+.form .form-group .form-control.form-control--custom {
+    border-radius: 50px;
+    box-shadow: rgba(133, 133, 133, 0.35) 0px 5px 15px;
+}
+
+.form .form-group .form-control.form-control--custom:hover {
+    box-shadow: #a3b1ff 0px 5px 15px;
 }
