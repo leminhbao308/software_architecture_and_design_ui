@@ -1,14 +1,18 @@
 import logo from "../assets/devicer-black.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import PathConst from "../consts/PathConst";
+import LoginService from "../services/auth/LoginService";
 
 const LoginPage = () => {
   const [username, setUsername] = useState(""); //  username or email
   const [password, setPassword] = useState(""); //  password
   const [isRememberSession, setRememberSession] = useState(false); //  true is remember, false is not
+  const [errorMessage, setErrorMessage] = useState(""); // handle throw error
 
   const [validated, setValidated] = useState(false); //  check form validation
+
+  const navigate = useNavigate();
 
   function onValueChange(e) {
     const { id, value, type, checked } = e.target;
@@ -29,7 +33,7 @@ const LoginPage = () => {
     }
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const form = e.target;
 
@@ -38,6 +42,26 @@ const LoginPage = () => {
     }
 
     setValidated(true);
+
+    try {
+      const response = await LoginService.login(username, password);
+      console.log("Đăng nhập thành công, token:", response.token);
+
+      // Lưu token vào localStorage nếu "Nhớ phiên đăng nhập" được chọn
+      if (isRememberSession) {
+        localStorage.setItem("authToken", response.token);
+      } else {
+        sessionStorage.setItem("authToken", response.token); 
+      }
+
+      // Chuyển hướng sau khi đăng nhập thành công
+      navigate(PathConst.HOME);
+    } catch (error) {
+      setErrorMessage(
+        "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin!" + error
+      );
+      console.error(errorMessage);
+    }
   }
 
   function handleGoogleLogin() {
