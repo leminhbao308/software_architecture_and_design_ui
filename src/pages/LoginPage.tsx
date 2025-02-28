@@ -49,11 +49,11 @@ const LoginPage = () => {
       // console.log("Đăng nhập thành công, token:", response.access_token);
 
       // Lưu token vào localStorage nếu "Nhớ phiên đăng nhập" được chọn
-      if (response.access_token) {
+      if (response.data.access_token) {
         if (isRememberSession) {
-          localStorage.setItem("access_token", response.access_token);
+          localStorage.setItem("access_token", response.data.access_token);
         } else {
-          sessionStorage.setItem("access_token", response.access_token);
+          sessionStorage.setItem("access_token", response.data.access_token);
         }
         // Chuyển hướng sau khi đăng nhập thành công
         navigate(PathConst.HOME);
@@ -120,7 +120,7 @@ const LoginPage = () => {
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="  "
               />
-              
+
               <div className="invalid-feedback">Mật khẩu là bắt buộc!</div>
             </div>
 

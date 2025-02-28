@@ -2,6 +2,8 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/devicer-white.png";
 import PathConst from "../../consts/PathConst";
 import { isAuthenticated, logout } from "../../services/auth/AuthService";
+import CategoryBtn from "../CategoryBtn";
+import SearchInput from "../SearchInput";
 
 const Header = () => {
   const location = useLocation();
@@ -14,7 +16,7 @@ const Header = () => {
 
   return (
     <header className="header">
-      <div className="container d-flex justify-content-between align-items-center py-3">
+      <div className="container header-container d-flex justify-content-between align-items-center py-3">
         <div className="header-logo">
           <Link to={PathConst.HOME}>
             <img
@@ -24,6 +26,13 @@ const Header = () => {
             />
           </Link>
         </div>
+        {isAuthenticated() && (
+          <>
+            <CategoryBtn />
+            <SearchInput />
+          </>
+        )}
+
         <div className="header-action">
           {isAuthenticated() ? (
             <button className="btn-logout" onClick={handleLogout}>
