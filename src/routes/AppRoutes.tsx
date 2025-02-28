@@ -17,7 +17,6 @@ const AppRoutes = () => {
         {/* Protected routes */}
         <Route element={<ProtectedRoute />}>
           <Route path="/" element={<Homepage />} />
-          {/* Thêm các trang khác cần bảo vệ tại đây */}
         </Route>
       </Routes>
     </Router>

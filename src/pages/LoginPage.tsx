@@ -4,6 +4,7 @@ import { useState } from "react";
 import PathConst from "../consts/PathConst";
 import LoginService from "../services/auth/LoginService";
 import AssetsConstant from "../consts/AssetsConstant";
+import PasswordInput from "../components/PasswordInput";
 
 const LoginPage = () => {
   const [username, setUsername] = useState(""); //  username or email
@@ -52,7 +53,7 @@ const LoginPage = () => {
         if (isRememberSession) {
           localStorage.setItem("access_token", response.access_token);
         } else {
-          sessionStorage.setItem("access_token", response.access_token); 
+          sessionStorage.setItem("access_token", response.access_token);
         }
         // Chuyển hướng sau khi đăng nhập thành công
         navigate(PathConst.HOME);
@@ -113,14 +114,13 @@ const LoginPage = () => {
               <label htmlFor="password" className="form-label fs-6 fw-regular">
                 Mật khẩu <span className="text-primary">*</span>
               </label>
-              <input
-                type="password"
-                className="form-control form-control--custom"
-                required
-                id="password"
+
+              <PasswordInput
                 value={password}
-                onChange={onValueChange}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="  "
               />
+              
               <div className="invalid-feedback">Mật khẩu là bắt buộc!</div>
             </div>
 
