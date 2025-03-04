@@ -9,11 +9,10 @@ const CategoryBtn = () => {
         <li className="category">Le Hoang Nam</li>
         <li className="category">Le Minh Bao</li>
         <li className="category">Nguyen Hong Duc</li>
-        <li className="category">Nguyen Trong Tien</li>
         <li className="category">Tat ca deu la dong chi</li>
       </ul>
     </div>
   );
-};
+};  
 
 export default CategoryBtn;

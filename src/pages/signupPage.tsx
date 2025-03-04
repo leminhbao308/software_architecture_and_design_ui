@@ -1,16 +1,20 @@
-import logo from "../assets/devicer-black.png";
-import { Link } from "react-router-dom";
+import { Link, Navigate, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import AssetsConstant from "../consts/AssetsConstant";
+import SignUpService from "../services/auth/SignUpService";
+import PathConst from "../consts/PathConst";
 
 const SignUpPage = () => {
   const [username, setUsername] = useState(""); //  username
+  const [firstName, setFirstName] = useState(""); // firstName
+  const [lastName, setLastName] = useState(""); // lastName
   const [password, setPassword] = useState(""); //  password
   const [email, setEmail] = useState(""); //  email
   const [phone, setPhone] = useState(""); //  phone
   const [confirmPassword, setConfirmPassword] = useState(""); //  confirm password
-
+  const [errorMessage, setErrorMessage] = useState(""); // handle throw error
   const [validated, setValidated] = useState(false); //  check form validation
+  const navigate = useNavigate();
 
   function onValueChange(e) {
     const { id, value } = e.target;
@@ -18,6 +22,12 @@ const SignUpPage = () => {
     switch (id) {
       case "username":
         setUsername(value);
+        break;
+      case "firstName":
+        setFirstName(value);
+        break;
+      case "lastName":
+        setLastName(value);
         break;
       case "password":
         setPassword(value);
@@ -36,20 +46,51 @@ const SignUpPage = () => {
     }
   }
 
-  function handleSubmit(e) {
+  async function handleSubmit(e) {
     e.preventDefault();
     const form = e.target;
 
     if (form.checkValidity() === false) {
       e.stopPropagation();
+    } else {
+      setValidated(true);
     }
 
-    setValidated(true);
+    try {
+      const response = await SignUpService.signup(
+        username,
+        firstName,
+        lastName,
+        password,
+        email,
+        phone
+      );
+
+      if (response.data.status) {
+
+        setTimeout(() => {
+          
+          setUsername("");
+          setFirstName("");
+          setLastName("");
+          setPassword("");
+          setConfirmPassword("");
+          setEmail("");
+          setPhone("");
+          navigate(PathConst.LOGIN);
+        }, 1000);
+      }
+    } catch (error) {
+      setErrorMessage(
+        "Đăng ký thất bại. Vui lòng kiểm tra lại thông tin!" + error
+      );
+      console.error(errorMessage);
+    }
   }
 
   function handleGoogleSignup() {
     // TODO: Implement login function with google
-    console.log("login with google");
+    console.log("Signup with google");
   }
 
   return (
@@ -89,6 +130,36 @@ const SignUpPage = () => {
                 onChange={onValueChange}
               />
               <div className="invalid-feedback">Username là bắt buộc!</div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="firstName" className="form-label fs-6 fw-regular">
+                FirstName <span className="text-primary">*</span>
+              </label>
+              <input
+                type="text"
+                className="form-control form-control--custom"
+                required
+                id="firstName"
+                value={firstName}
+                onChange={onValueChange}
+              />
+              <div className="invalid-feedback">firstName là bắt buộc!</div>
+            </div>
+
+            <div className="form-group">
+              <label htmlFor="lastName" className="form-label fs-6 fw-regular">
+                LastName <span className="text-primary">*</span>
+              </label>
+              <input
+                type="text"
+                className="form-control form-control--custom"
+                required
+                id="lastName"
+                value={lastName}
+                onChange={onValueChange}
+              />
+              <div className="invalid-feedback">LastName là bắt buộc!</div>
             </div>
 
             <div className="form-group">
