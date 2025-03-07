@@ -64,6 +64,18 @@
     font-weight: 600;
 }
 
+.auth-link {
+    color: var(--white-text-color);
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: 600;
+}
+
+.auth-link:hover {
+    color: var(--white-text-color);
+    text-decoration: none;
+}
+
 .header .header-action .btn-logout {
     background: none;
     border: none;
