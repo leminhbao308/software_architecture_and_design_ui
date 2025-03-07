@@ -2,9 +2,9 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import Logo from "../../assets/devicer-white.png";
 import PathConst from "../../consts/PathConst";
 import { isAuthenticated, logout } from "../../services/auth/AuthService";
-import CategoryBtn from "../CategoryBtn";
+import CategoryBtn from "../category/CategoryComponent";
 import SearchInput from "../SearchInput";
-import CartComponent from "../CartComponent";
+import CartComponent from "../cart/CartComponent";
 
 const Header = () => {
   const location = useLocation();

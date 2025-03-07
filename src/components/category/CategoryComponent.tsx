@@ -1,6 +1,4 @@
-import { useEffect } from "react";
-import AssetsConstant from "../consts/AssetsConstant";
-import CategoryService from "../services/category/CategoryService";
+import AssetsConstant from "../../consts/AssetsConstant";
 
 const CategoryBtn = () => {
   const datas = [
@@ -18,6 +16,7 @@ const CategoryBtn = () => {
     },
   ];
 
+  
   return (
     <div className="category-container">
       <div className="category-btn">

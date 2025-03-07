@@ -18,6 +18,7 @@ Trong đó:
     - `refactor`: Sửa lỗi hoặc thêm mới về code mà không ảnh hưởng đến chức năng
     - `perf`: Sửa lỗi hoặc thêm mới về hiệu suất
     - `test`: Sửa lỗi hoặc thêm mới về test
+    - `bugs`: Đẩy code nhưng vẫn còn lỗi - mục đích để members test và debug
 
 - `<scope>`: là mô tả về phạm vi các file hoặc module bị ảnh hưởng bởi commit
     - Ví dụ: `login`, `database`, `wiki`, ...
