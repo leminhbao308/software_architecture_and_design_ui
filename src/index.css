@@ -2,6 +2,8 @@
   --header-bg-color: #212121;
   --white-text-color: #fff;
   --high-light-color: #3452FF;
+  --high-light-box-shadow-color: #647af8;
+  --high-light-box-shadow-color-hover: #98a6f8;
 }
 
 * {

@@ -9,16 +9,16 @@ const AppRoutes = () => {
   return (
     <Router>
       <Header />
-      <Routes>
-        {/* Public routes */}
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/signup" element={<SignUpPage />} />
+        <Routes>
+          {/* Public routes */}
+          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<SignUpPage />} />
 
-        {/* Protected routes */}
-        <Route element={<ProtectedRoute />}>
-          <Route path="/" element={<Homepage />} />
-        </Route>
-      </Routes>
+          {/* Protected routes */}
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Homepage />} />
+          </Route>
+        </Routes>
     </Router>
   );
 };

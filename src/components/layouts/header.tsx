@@ -4,6 +4,7 @@ import PathConst from "../../consts/PathConst";
 import { isAuthenticated, logout } from "../../services/auth/AuthService";
 import CategoryBtn from "../CategoryBtn";
 import SearchInput from "../SearchInput";
+import CartComponent from "../CartComponent";
 
 const Header = () => {
   const location = useLocation();
@@ -30,6 +31,7 @@ const Header = () => {
           <>
             <CategoryBtn />
             <SearchInput />
+            <CartComponent />
           </>
         )}
 
