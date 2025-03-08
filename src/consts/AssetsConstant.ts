@@ -11,6 +11,7 @@ import bugCloseIcon from "../assets/bug-close-icon.svg";
 import successCloseIcon from "../assets/success-close-icon.svg";
 import warningCloseIcon from "../assets/warning-close-icon.svg";
 import CartIcon from "../assets/cart-icon.svg";
+import userIcon from "../assets/user-icon.png";
 import DeleteIcon from "../assets/delete-icon.svg";
 import ProductIphone16ProMax from "../assets/product-iphone16promax.jpg";
 
@@ -31,6 +32,7 @@ const AssetsConstant = {
   PRODUCTS: {
     IPHONE_16_PRO_MAX: ProductIphone16ProMax,
   },
+  USER_ICON: userIcon,
 };
 
 export default AssetsConstant;
