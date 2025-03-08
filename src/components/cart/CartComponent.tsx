@@ -15,7 +15,7 @@ const CartComponent = () => {
           <CartItemComponent />
           <CartItemComponent />
           <CartItemComponent />
-          <CartItemComponent />
+          <CartItemComponent /> 
           <CartItemComponent />
           <CartItemComponent />
         </div>
