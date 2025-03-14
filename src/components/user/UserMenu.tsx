@@ -15,26 +15,25 @@ const UserMenu = () => {
 
   return (
     <div 
-      className="category-container user-menu"
+      className="user-container"
       onMouseEnter={() => setShowUserMenu(true)}
       onMouseLeave={() => setShowUserMenu(false)}
       role="menu"
       aria-label="User menu"
     >
-      <div className="category-btn">
+      <div className="user-btn">
         <img 
           src={AssetsConstant.USER_ICON} 
           alt="User Icon" 
-          className="category-btn-img user-icon"
+        className="user-btn-img user-icon"
         />
-        <p className="category-btn-title">Tài khoản</p>
       </div>
 
       {/* Dropdown menu */}
       {showUserMenu && (
-        <ul className="categories">
-          <li className="category">User Info</li>
-          <li className="category" onClick={handleLogout}>Log Out</li>
+        <ul className="user-dropdown">
+          <li className="user-option">User Info</li>
+          <li className="user-option" onClick={handleLogout}>Log Out</li>
         </ul>
       )}
     </div>
