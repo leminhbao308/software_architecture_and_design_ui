@@ -16,7 +16,7 @@ const CategoryService = {
 
       // Kiểm tra nếu response có data hợp lệ
       if (response.status === 200) {
-        console.log(response);
+        // console.log(response);
         return response.data;
       } else {
         throw new Error("Lấy danh mục thất bại");
@@ -24,6 +24,7 @@ const CategoryService = {
     } catch (error) {
       console.error("get all category is failed", error);
       throw error;
+      return [];
     }
   },
 };

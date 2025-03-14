@@ -3,6 +3,7 @@ import { useState } from "react";
 import AssetsConstant from "../consts/AssetsConstant";
 import SignUpService from "../services/auth/SignUpService";
 import PathConst from "../consts/PathConst";
+import PasswordInput from "../components/PasswordInput";
 
 const SignUpPage = () => {
   const [username, setUsername] = useState(""); //  username
@@ -67,9 +68,7 @@ const SignUpPage = () => {
       );
 
       if (response.data.status) {
-
         setTimeout(() => {
-          
           setUsername("");
           setFirstName("");
           setLastName("");
@@ -196,13 +195,10 @@ const SignUpPage = () => {
               <label htmlFor="password" className="form-label fs-6 fw-regular">
                 Mật khẩu <span className="text-primary">*</span>
               </label>
-              <input
-                type="password"
-                className="form-control form-control--custom"
-                required
-                id="password"
+              <PasswordInput
                 value={password}
-                onChange={onValueChange}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="  "
               />
               <div className="invalid-feedback">Mật khẩu là bắt buộc!</div>
             </div>
@@ -214,13 +210,10 @@ const SignUpPage = () => {
               >
                 Xác Nhận Mật khẩu <span className="text-primary">*</span>
               </label>
-              <input
-                type="password"
-                className="form-control form-control--custom"
-                required
-                id="confirmPassword"
+              <PasswordInput
                 value={confirmPassword}
-                onChange={onValueChange}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                placeholder="  "
               />
               <div className="invalid-feedback">
                 Xác nhận mật khẩu là bắt buộc!

@@ -14,6 +14,7 @@ import CartIcon from "../assets/cart-icon.svg";
 import userIcon from "../assets/user-icon.png";
 import DeleteIcon from "../assets/delete-icon.svg";
 import ProductIphone16ProMax from "../assets/product-iphone16promax.jpg";
+import userIcon from "../assets/user-icon.png";
 
 const AssetsConstant = {
   WHITE_LOGO: whiteLogo,
