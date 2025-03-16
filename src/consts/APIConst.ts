@@ -3,6 +3,7 @@ const APIConst = {
   LOGIN: "/auth/login",
   SIGNUP: "/auth/register",
   GET_ALL_CATEGORIES: "/categories",
+  GET_ALL_PRODUCTS: "/products",
 };
 
 export default APIConst;

@@ -38,6 +38,7 @@
     background-color: var(--header-bg-color);
     position: fixed;
     top: 0;
+    z-index: 999999;
 }
 
 .header .container.header-container {
@@ -222,6 +223,7 @@
 
 .category {
     padding: 6px 10px;
+    border-radius: 6px;
 }
 
 .category:last-child {
@@ -343,6 +345,7 @@
 .cart-container:hover .total-item {
     background-color: var(--high-light-box-shadow-color);
 }
+
 /* User Menu */
 .user-container {
     position: relative;
@@ -507,4 +510,19 @@
 
 .view-cart-detail:hover {
     color: var(--high-light-color);
+}
+
+
+/* Product */
+.products {
+    display: flex;
+    flex-wrap: wrap; /* Đảm bảo các card xuống dòng nếu quá số lượng */
+    gap: 10px; /* Khoảng cách giữa các card */
+}
+
+.products .card {
+    width: calc(100% / 5 - 10px); /* Đảm bảo mỗi card chiếm 1/5 chiều rộng */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+    padding-top: 12px;
 }

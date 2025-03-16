@@ -1,4 +1,3 @@
-import React from "react";
 import { useEffect, useState } from "react";
 import AssetsConstant from "../../consts/AssetsConstant";
 import CategoryService from "../../services/category/CategoryService";
@@ -42,6 +41,8 @@ const CategoryBtn = () => {
   }, []);
 
   return (
+    
+    
     <div className="category-container">
       <div className="category-btn">
         <img
