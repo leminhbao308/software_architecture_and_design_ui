@@ -1,6 +1,6 @@
 import StatusConst from "../../consts/StatusConst";
 import { ProductType } from "../../types/ProductType";
-import FormatBaseAndCurrentPrice from "../price/formatBassAndCurrentPrice";
+import FormatBaseAndCurrentPrice from "../price/FormatBassAndCurrentPrice";
 import CardAction from "./CardAction";
 interface ProductCardProps {
   product: ProductType;
@@ -38,7 +38,17 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
         <>
           {product.status === StatusConst.ACTIVE ? (
             <>
-              <div className="tag tag__coupon">Giảm 50%</div>
+              {product.basePrice === product.currentPrice ? (
+                " "
+              ) : (
+                <div className="tag tag__coupon">
+                  Giảm{" "}
+                  {Math.ceil(
+                    (1 - product.currentPrice / product.basePrice) * 100
+                  )}{" "}
+                  %
+                </div>
+              )}
               <CardAction />
             </>
           ) : (

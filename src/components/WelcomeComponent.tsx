@@ -5,8 +5,13 @@ import ProductCard from "./products/ProductCard";
 import ProductService from "../services/product/ProductService";
 import { useEffect, useState } from "react";
 import { ProductType } from "../types/ProductType";
+import SortComponent from "./sort/SortComponent";
+import StatusConst from "../consts/StatusConst";
 const WelcomeComponent = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
+  const [sortType, setSortType] = useState<"decrease" | "increase" | null>(
+    null
+  );
 
   const accessToken: string | null =
     localStorage.getItem("access_token") ||
@@ -25,6 +30,7 @@ const WelcomeComponent = () => {
           setProducts(listProducts);
         } else {
           console.log("Không tồn tại product");
+          setProducts([]);
         }
       } catch (error) {
         console.log(error);
@@ -33,6 +39,42 @@ const WelcomeComponent = () => {
     };
     fetchProduct();
   }, []);
+
+  // Phương thức sắp xếp sản phẩm giảm dần theo giá
+  const handleSortDecrease = () => {
+    setSortType("decrease");
+    const sortStep01 = [...products].sort(
+      (a, b) => b.currentPrice - a.currentPrice
+    );
+    const sortStep02 = sortStep01.filter(
+      (product) => product.status === StatusConst.ACTIVE
+    );
+
+    const sortStep03 = sortStep01.filter(
+      (product) => product.status === StatusConst.INACTIVE
+    );
+    const result = [...sortStep02, ...sortStep03];
+    setProducts(result);
+    console.log(products);
+  };
+
+  // Phương thức sắp xếp sản phẩm tăng dần theo giá
+  const handleSortIncrease = () => {
+    setSortType("increase");
+    const sortStep01 = [...products].sort(
+      (a, b) => a.currentPrice - b.currentPrice
+    );
+    const sortStep02 = sortStep01.filter(
+      (product) => product.status === StatusConst.ACTIVE
+    );
+
+    const sortStep03 = sortStep01.filter(
+      (product) => product.status === StatusConst.INACTIVE
+    );
+    const result = [...sortStep02, ...sortStep03];
+    setProducts(result);
+    console.log(products);
+  };
 
   return (
     <div>
@@ -46,6 +88,11 @@ const WelcomeComponent = () => {
           />
         </Link>
       </div>
+      <SortComponent
+        onSortDecrease={handleSortDecrease}
+        onSortIncrease={handleSortIncrease}
+        currentSort={sortType}
+      />
       <div className="row products">
         {products.map((product) => {
           return <ProductCard key={product.productId} product={product} />;
