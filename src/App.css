@@ -704,3 +704,12 @@
 .filter .filter-option:hover img {
     filter: var(--filter-add-to-cart-color);
 }
+
+.filter .filter-option.active {
+    border: 1px solid var(--high-light-box-shadow-color-hover);
+    color: var(--high-light-color);
+}
+
+.filter .filter-option.active img {
+    filter: var(--filter-add-to-cart-color);
+}
