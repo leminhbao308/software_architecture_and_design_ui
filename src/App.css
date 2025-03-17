@@ -516,13 +516,145 @@
 /* Product */
 .products {
     display: flex;
-    flex-wrap: wrap; /* Đảm bảo các card xuống dòng nếu quá số lượng */
-    gap: 10px; /* Khoảng cách giữa các card */
+    flex-wrap: wrap;
+    /* Đảm bảo các card xuống dòng nếu quá số lượng */
+    gap: 10px;
+    /* Khoảng cách giữa các card */
 }
 
-.products .card {
-    width: calc(100% / 5 - 10px); /* Đảm bảo mỗi card chiếm 1/5 chiều rộng */
+.products .card.product {
+    position: relative;
+    width: calc(100% / 5 - 10px);
+    /* Đảm bảo mỗi card chiếm 1/5 chiều rộng */
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
     border-radius: 8px;
-    padding-top: 12px;
+    padding: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    overflow: hidden;
+    transition: .75s;
+}
+
+.products .card.product:hover {
+    cursor: pointer;
+    box-shadow: 0 4px 6px var(--high-light-color);
+    transition: .75s;
+}
+
+.card.product .card-body {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    padding: 0px;
+}
+
+.card.product .card-body .card-text {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.card-body .card-title__product--custom {
+    font-size: 14px;
+    font-weight: 700;
+    margin: 10px 0 6px 0;
+}
+
+.cart-text__product--description {
+    flex: 1;
+    font-size: 12px;
+    padding: 6px;
+    background-color: #f3f4f6;
+    border-radius: 6px;
+    max-height: 50px;
+    border: 1px solid #e5e7eb;
+    margin-bottom: 0px;
+}
+
+.card-text.cart-text__product--description .cart-text__product--wrap {
+    height: 100%;
+    overflow: hidden;
+}
+
+/* Card Product Action */
+
+.card-action {
+    position: absolute;
+    right: -48px;
+    /* right: 12px; */
+    background-color: var(--white-text-color);
+    padding: 14px 4px;
+    border-radius: 18px;
+    z-index: 99;
+    border: 1px solid var(--high-light-box-shadow-color-hover);
+    cursor: default;
+    box-shadow: 0 4px 6px var(--high-light-box-shadow-color-hover);
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.card-action button {
+    border: none;
+    outline: none;
+    background: none;
+    padding: 4px;
+}
+
+.card-action button img {
+    width: 24px;
+}
+
+
+.card-action button img:hover {
+    filter: var(--filter-add-to-cart-color);
+}
+
+
+.products .card.product:hover .card-action {
+    transition: .5s;
+    right: 12px;
+}
+
+/* Card product Tag */
+.tag {
+    font-size: 14px;
+    position: absolute;
+    padding: 6px 12px;
+    border-top-right-radius: 25px;
+    border-bottom-right-radius: 25px;
+    top: 0;
+    left: 0;
+    font-weight: 600;
+}
+
+.tag__coupon {
+    color: white;
+    background-color: var(--high-light-color);
+}
+
+.tag__sold-out {
+    color: white;
+    background-color: #D70654;
+}
+
+/* Price */
+
+.prices {
+    display: flex;
+    gap: 10px;
+    align-items: end;
+    margin-bottom: 4px;
+}
+
+.main-price {
+    font-size: 16px;
+    color: var(--high-light-color);
+    font-weight: 700;
+}
+
+.secondary-price {
+    font-size: 14px;
+    color: #b5b7b9;
 }

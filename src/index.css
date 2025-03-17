@@ -4,6 +4,7 @@
   --high-light-color: #3452FF;
   --high-light-box-shadow-color: #647af8;
   --high-light-box-shadow-color-hover: #98a6f8;
+  --filter-add-to-cart-color: brightness(0) saturate(100%) invert(29%) sepia(96%) saturate(4986%) hue-rotate(232deg) brightness(103%) contrast(101%);
 }
 
 * {

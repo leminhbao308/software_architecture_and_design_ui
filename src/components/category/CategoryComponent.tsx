@@ -53,7 +53,7 @@ const CategoryBtn = () => {
         <p className="category-btn-title">Danh mục</p>
       </div>
       <ul className="categories">
-        {categories.map((data, index) => {
+        {categories.map((data) => {
           return (
             <li className="category" key={data.id}>
               {data.name}

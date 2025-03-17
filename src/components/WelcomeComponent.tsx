@@ -23,7 +23,6 @@ const WelcomeComponent = () => {
         const listProducts = data.data.content;
         if (Array.isArray(listProducts)) {
           setProducts(listProducts);
-          // console.log(listProducts);
         } else {
           console.log("Không tồn tại product");
         }
@@ -46,18 +45,9 @@ const WelcomeComponent = () => {
             className={"d-flex justify-content-center align-items-center"}
           />
         </Link>
-        {/* <div className="notification">
-        <div className="noti-status-icon">
-          <img src={AssetsConstant.SUCCESS_ICON} alt="success icon" />
-        </div>
-        <div className="noti-message">Tên tài khoản hoặc email đã tồn tại!</div>
-        <button className="notification-action">
-          <img src={AssetsConstant.SUCCESS_CLOSE_ICON} alt="close icon" />
-        </button>
-      </div> */}
       </div>
       <div className="row products">
-        {products.map((product, index) => {
+        {products.map((product) => {
           return <ProductCard key={product.productId} product={product} />;
         })}
       </div>

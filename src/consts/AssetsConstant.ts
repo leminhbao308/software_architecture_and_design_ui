@@ -14,7 +14,7 @@ import CartIcon from "../assets/cart-icon.svg";
 import userIcon from "../assets/user-icon.png";
 import DeleteIcon from "../assets/delete-icon.svg";
 import ProductIphone16ProMax from "../assets/product-iphone16promax.jpg";
-import userIcon from "../assets/user-icon.png";
+import AddToCardIcon from "../assets/add-to-cart.svg";
 
 const AssetsConstant = {
   WHITE_LOGO: whiteLogo,
@@ -29,6 +29,7 @@ const AssetsConstant = {
   SUCCESS_CLOSE_ICON: successCloseIcon,
   WARNING_CLOSE_ICON: warningCloseIcon,
   CART_ICON: CartIcon,
+  ADD_TO_CART: AddToCardIcon,
   DELETE_ICON: DeleteIcon,
   PRODUCTS: {
     IPHONE_16_PRO_MAX: ProductIphone16ProMax,
