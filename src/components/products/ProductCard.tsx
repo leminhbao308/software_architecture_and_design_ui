@@ -1,3 +1,4 @@
+import { useNavigate, useNavigation } from "react-router-dom";
 import StatusConst from "../../consts/StatusConst";
 import { ProductType } from "../../types/ProductType";
 import FormatBaseAndCurrentPrice from "../price/FormatBassAndCurrentPrice";
@@ -6,9 +7,18 @@ interface ProductCardProps {
   product: ProductType;
 }
 const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
+  const navigate = useNavigate();
   return (
     <div className="card product">
-      <div onClick={() => console.log("View Product Detail")}>
+      <div
+        onClick={() =>
+          navigate("/product-detail", {
+            state: {
+              product: product,
+            },
+          })
+        }
+      >
         <img
           src="https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/i/p/iphone-14-plus_1__1.png"
           className="card-img-top"

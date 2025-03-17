@@ -93,7 +93,7 @@ const WelcomeComponent = () => {
         onSortIncrease={handleSortIncrease}
         currentSort={sortType}
       />
-      <div className="row products">
+      <div className="row products mb-5">
         {products.map((product) => {
           return <ProductCard key={product.productId} product={product} />;
         })}

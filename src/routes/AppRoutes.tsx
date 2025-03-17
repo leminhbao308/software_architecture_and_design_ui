@@ -4,6 +4,7 @@ import Header from "../components/layouts/header";
 import SignUpPage from "../pages/signupPage";
 import ProtectedRoute from "./ProtecedRoute";
 import Homepage from "../pages/HomePage";
+import ProductDetail from "../pages/products/ProductDetail";
 
 const AppRoutes = () => {
   return (
@@ -17,6 +18,7 @@ const AppRoutes = () => {
           {/* Protected routes */}
           <Route element={<ProtectedRoute />}>
             <Route path="/" element={<Homepage />} />
+            <Route path="/product-detail" element={<ProductDetail />} />
           </Route>
         </Routes>
     </Router>

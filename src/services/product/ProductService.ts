@@ -27,6 +27,28 @@ const ProductService = {
       return [];
     }
   },
-  getProductByProductId: () => {},
+  getProductByProductId: async (access_token: string, productId: string) => {
+    try {
+      const response = await axios.get(
+        `${APIConst.API_CONTEXT}${APIConst.GET_PRODUCT_BY_ID}/${productId}`,
+        {
+          headers: {
+            Authorization: `Bearer ${access_token}`,
+            "Content-Type": "application/json",
+          },
+        }
+      );
+
+      if (response.status === 200) {
+        return response.data;
+      } else {
+        console.log(`Lấy sản phẩm với ID ${productId} thất bại`);
+        return null;
+      }
+    } catch (error) {
+      console.error(`Lấy sản phẩm với ID ${productId} thất bại:`, error);
+      return null;
+    }
+  },
 };
 export default ProductService;

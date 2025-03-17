@@ -4,6 +4,7 @@ const APIConst = {
   SIGNUP: "/auth/register",
   GET_ALL_CATEGORIES: "/categories",
   GET_ALL_PRODUCTS: "/products",
+  GET_PRODUCT_BY_ID: "/products",
 };
 
 export default APIConst;

@@ -713,3 +713,8 @@
 .filter .filter-option.active img {
     filter: var(--filter-add-to-cart-color);
 }
+
+/* product-detail */
+.container.product-detail {
+    padding-top: 96px;
+}
