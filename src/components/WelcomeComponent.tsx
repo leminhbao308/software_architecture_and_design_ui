@@ -7,11 +7,13 @@ import { useEffect, useState } from "react";
 import { ProductType } from "../types/ProductType";
 import SortComponent from "./sort/SortComponent";
 import StatusConst from "../consts/StatusConst";
+import { useUserContext } from "../context";
 const WelcomeComponent = () => {
   const [products, setProducts] = useState<ProductType[]>([]);
   const [sortType, setSortType] = useState<"decrease" | "increase" | null>(
     null
   );
+  const { userId } = useUserContext();
 
   const accessToken: string | null =
     localStorage.getItem("access_token") ||

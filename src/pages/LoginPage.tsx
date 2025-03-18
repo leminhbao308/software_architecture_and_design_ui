@@ -1,10 +1,11 @@
-import logo from "../assets/devicer-black.png";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import PathConst from "../consts/PathConst";
 import LoginService from "../services/auth/LoginService";
 import AssetsConstant from "../consts/AssetsConstant";
 import PasswordInput from "../components/PasswordInput";
+import UserService from "../services/user/UserService";
+import { useUserContext } from "../context";
 
 const LoginPage = () => {
   const [username, setUsername] = useState(""); //  username or email
@@ -12,6 +13,7 @@ const LoginPage = () => {
   const [isRememberSession, setRememberSession] = useState(false); //  true is remember, false is not
   const [errorMessage, setErrorMessage] = useState(""); // handle throw error
   const [validated, setValidated] = useState(false); //  check form validation
+  const { setUserId } = useUserContext();
 
   const navigate = useNavigate();
 
@@ -55,6 +57,13 @@ const LoginPage = () => {
         } else {
           sessionStorage.setItem("access_token", response.data.access_token);
         }
+
+        const getUserInfo = await UserService.getUserInfo(
+          response.data.access_token
+        );
+        setUserId(getUserInfo.data.sub);
+        // console.log(getUserInfo.data.sub);
+
         // Chuyển hướng sau khi đăng nhập thành công
         navigate(PathConst.HOME);
       }

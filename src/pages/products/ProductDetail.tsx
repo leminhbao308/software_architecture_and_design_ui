@@ -9,7 +9,7 @@ const ProductDetail = () => {
   return (
     <div className="container product-detail d-flex flex-column">
       <div className="row py-3">
-        <div className="col-6">
+        <div className="col col-6">
           <img
             width="100%"
             src={AssetsConstant.PRODUCTS.IPHONE_16_PRO_MAX}
@@ -17,7 +17,7 @@ const ProductDetail = () => {
             style={{ borderRadius: "10px" }}
           />
         </div>
-        <div className="col-6">
+        <div className="col col-6">
           <div>Name: {product.name}</div>
           <div>Base price: {product.basePrice}</div>
           <div>Current price: {product.currentPrice}</div>
