@@ -1,3 +1,5 @@
+@import "tailwindcss";
+
 /* Common */
 .password-input {
     width: 100%;
@@ -756,7 +758,7 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
 }
 
 .product-detail .expand-button img {
@@ -767,7 +769,7 @@
 
 .product-detail .expand-button:hover {
     background: #f8f9fa;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Breadcrumb */
