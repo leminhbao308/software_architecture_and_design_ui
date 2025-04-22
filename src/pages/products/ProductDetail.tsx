@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
+import {useLocation, useNavigate} from "react-router-dom";
 import AssetsConstant from "../../consts/AssetsConstant";
 
 const ProductDetail = () => {
+
   const location = useLocation();
   const navigate = useNavigate();
   const product = location.state?.product;
@@ -69,7 +70,7 @@ const ProductDetail = () => {
         {/* Product Info */}
         <div className="col-md-6">
           <h1 className="product-title">{product?.name}</h1>
-          
+
           {/* Price Section */}
           <div className="price-section">
             <span className="current-price">${product?.currentPrice}</span>
@@ -114,7 +115,7 @@ const ProductDetail = () => {
               max={product?.totalQuantity}
               className="quantity-input"
             />
-            <button 
+            <button
               className="btn btn-primary add-to-cart-btn"
               onClick={handleAddToCart}
               disabled={quantity === 0 || quantity > product?.totalQuantity}

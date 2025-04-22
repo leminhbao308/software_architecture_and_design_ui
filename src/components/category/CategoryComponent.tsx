@@ -1,68 +1,104 @@
-import { useEffect, useState } from "react";
-import AssetsConstant from "../../consts/AssetsConstant";
+import { useEffect } from "react";
+import { Button, Space, Dropdown } from "antd";
+import type { MenuProps } from "antd";
+import { MenuOutlined } from "@ant-design/icons";
 import CategoryService from "../../services/category/CategoryService";
+import useCategoryContext from "../../hooks/useCategoryContext.ts";
+import { useNavigate } from "react-router-dom";
 
 interface CategoryType {
-  id: string;
-  name: string;
-  children?: CategoryType[];
-  metadata?: object;
+    id: string;
+    name: string;
+    children?: CategoryType[];
+    metadata?: object;
 }
 
 const CategoryBtn = () => {
-  const [categories, setCategories] = useState<CategoryType[]>([]);
-  const accessToken: string | null =
-    localStorage.getItem("access_token") ||
-    sessionStorage.getItem("access_token");
+    const { categories, setCategories } = useCategoryContext();
+    const navigate = useNavigate();
 
-  useEffect(() => {
-    const fetchCategories = async () => {
-      if (!accessToken) {
-        console.log("AccessToken không tồn tại");
-        return;
-      }
+    const accessToken: string | null =
+        localStorage.getItem("access_token") ||
+        sessionStorage.getItem("access_token");
 
-      try {
-        const data = await CategoryService.getAllCategory(accessToken);
-        const datas = data.data;
-        if (Array.isArray(datas)) {
-          setCategories(datas); // Đảm bảo chỉ cập nhật khi data là mảng
-        } else {
-          console.error("Dữ liệu API không phải là mảng:", datas);
-          setCategories([]); // Gán mảng rỗng nếu dữ liệu không đúng định dạng
-        }
-      } catch (error) {
-        console.error("Lấy danh mục thất bại:", error);
-        setCategories([]); // Tránh lỗi khi API thất bại
-      }
+    useEffect(() => {
+        const fetchCategories = async () => {
+            if (!accessToken) {
+                console.log("AccessToken không tồn tại");
+                return;
+            }
+
+            try {
+                const data = await CategoryService.getAllCategory(accessToken);
+                const datas = data.data;
+                if (Array.isArray(datas)) {
+                    setCategories(datas);
+                } else {
+                    console.error("Dữ liệu API không phải là mảng:", datas);
+                    setCategories([]);
+                }
+            } catch (error) {
+                console.error("Lấy danh mục thất bại:", error);
+                setCategories([]);
+            }
+        };
+
+        fetchCategories();
+    }, [accessToken, setCategories]);
+
+    // Handle category item click
+    const handleCategoryClick = (categoryId: string) => {
+        navigate(`/products/${categoryId}`);
     };
 
-    fetchCategories();
-  }, []);
+    // Convert categories to MenuProps items format
+    const getMenuItems = (categories: CategoryType[]): MenuProps['items'] => {
+        return categories.map((category) => {
+            if (category.children && category.children.length > 0) {
+                return {
+                    key: category.id,
+                    label: category.name,
+                    popupOffset: [1, 0],
+                    children: getMenuItems(category.children),
+                    onClick: () => handleCategoryClick(category.id)
+                };
+            }
+            return {
+                key: category.id,
+                label: category.name,
+                onClick: () => handleCategoryClick(category.id)
+            };
+        });
+    };
 
-  return (
-    
-    
-    <div className="category-container">
-      <div className="category-btn">
-        <img
-          className="category-btn-img"
-          src={AssetsConstant.WHITE_MENU_ICON}
-          alt="menu icon"
-        />
-        <p className="category-btn-title">Danh mục</p>
-      </div>
-      <ul className="categories">
-        {categories.map((data) => {
-          return (
-            <li className="category" key={data.id}>
-              {data.name}
-            </li>
-          );
-        })}
-      </ul>
-    </div>
-  );
+    // Create menu props
+    const menuProps: MenuProps = {
+        items: getMenuItems(categories),
+        style: {
+            // width: '200px',
+            boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
+        }
+    };
+
+    return (
+        <Dropdown
+            menu={menuProps}
+            placement="bottomLeft"
+            trigger={['click', 'hover']}
+        >
+            <Button
+                size={"large"}
+                type="primary"
+                icon={<MenuOutlined/>}
+                iconPosition={"start"}
+                style={{display: 'flex', alignItems: 'center', fontWeight: '500', background: "gray"}}
+            >
+                <Space>
+                    Danh mục
+                </Space>
+            </Button>
+        </Dropdown>
+    );
 };
 
 export default CategoryBtn;

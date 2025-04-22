@@ -9,3 +9,4 @@ export const logout = (): void => {
   localStorage.removeItem("access_token");
   sessionStorage.removeItem("access_token");
 };
+

@@ -1,105 +1,48 @@
-import { Link } from "react-router-dom";
-import PathConst from "../consts/PathConst";
-import AssetsConstant from "../consts/AssetsConstant";
-import ProductCard from "./products/ProductCard";
-import ProductService from "../services/product/ProductService";
-import { useEffect, useState } from "react";
-import { ProductType } from "../types/ProductType";
-import SortComponent from "./sort/SortComponent";
-import StatusConst from "../consts/StatusConst";
+import ProductSegment from "./products/ProductSegment.tsx";
+
 const WelcomeComponent = () => {
-  const [products, setProducts] = useState<ProductType[]>([]);
-  const [sortType, setSortType] = useState<"decrease" | "increase" | null>(
-    null
-  );
 
-  const accessToken: string | null =
-    localStorage.getItem("access_token") ||
-    sessionStorage.getItem("access_token");
+    const currentMonth = new Date().getMonth() + 1;
 
-  useEffect(() => {
-    const fetchProduct = async () => {
-      if (!accessToken) {
-        console.log("AccessToken không tồn tại");
-        return;
-      }
-      try {
-        const data = await ProductService.getAllProduct(accessToken);
-        const listProducts = data.data.content;
-        if (Array.isArray(listProducts)) {
-          setProducts(listProducts);
-        } else {
-          console.log("Không tồn tại product");
-          setProducts([]);
-        }
-      } catch (error) {
-        console.log(error);
-        setProducts([]);
-      }
-    };
-    fetchProduct();
-  }, []);
+    return (
+        <div style={{marginTop: "150px"}}>
+            <ProductSegment
+                title={`Laptop Hot Tháng ${currentMonth}`}
+                categoryId={"0e122d77-bd1c-4602-805b-01bc00a4cfab"}
+                size={8}
+                canLoadMore={false}
+                button={{
+                    show: true,
+                    title: "Xem tất cả",
+                    navigateToCategoryId: "0e122d77-bd1c-4602-805b-01bc00a4cfab"
+                }}
+            />
 
-  // Phương thức sắp xếp sản phẩm giảm dần theo giá
-  const handleSortDecrease = () => {
-    setSortType("decrease");
-    const sortStep01 = [...products].sort(
-      (a, b) => b.currentPrice - a.currentPrice
+            <ProductSegment
+                title={`Điện Thoại Hot Tháng ${currentMonth}`}
+                categoryId={"16dbc98c-d6c6-449f-901a-e89b4c1bf612"}
+                size={8}
+                canLoadMore={false}
+                button={{
+                    show: true,
+                    title: "Xem tất cả",
+                    navigateToCategoryId: "16dbc98c-d6c6-449f-901a-e89b4c1bf612"
+                }}
+            />
+
+            <ProductSegment
+                title={`Đồng Hồ Thông Minh Xịn`}
+                categoryId={"30a44fc3-c9c5-478d-8aa8-e040e9d67bdc"}
+                size={8}
+                canLoadMore={false}
+                button={{
+                    show: true,
+                    title: "Xem tất cả",
+                    navigateToCategoryId: "30a44fc3-c9c5-478d-8aa8-e040e9d67bdc"
+                }}
+            />
+        </div>
     );
-    const sortStep02 = sortStep01.filter(
-      (product) => product.status === StatusConst.ACTIVE
-    );
-
-    const sortStep03 = sortStep01.filter(
-      (product) => product.status === StatusConst.INACTIVE
-    );
-    const result = [...sortStep02, ...sortStep03];
-    setProducts(result);
-    console.log(products);
-  };
-
-  // Phương thức sắp xếp sản phẩm tăng dần theo giá
-  const handleSortIncrease = () => {
-    setSortType("increase");
-    const sortStep01 = [...products].sort(
-      (a, b) => a.currentPrice - b.currentPrice
-    );
-    const sortStep02 = sortStep01.filter(
-      (product) => product.status === StatusConst.ACTIVE
-    );
-
-    const sortStep03 = sortStep01.filter(
-      (product) => product.status === StatusConst.INACTIVE
-    );
-    const result = [...sortStep02, ...sortStep03];
-    setProducts(result);
-    console.log(products);
-  };
-
-  return (
-    <div>
-      <div className={"home-intro"}>
-        <span>Welcome To</span>
-        <Link to={PathConst.HOME}>
-          <img
-            src={AssetsConstant.BLACK_LOGO}
-            alt={"logo"}
-            className={"d-flex justify-content-center align-items-center"}
-          />
-        </Link>
-      </div>
-      <SortComponent
-        onSortDecrease={handleSortDecrease}
-        onSortIncrease={handleSortIncrease}
-        currentSort={sortType}
-      />
-      <div className="row products mb-5">
-        {products.map((product) => {
-          return <ProductCard key={product.productId} product={product} />;
-        })}
-      </div>
-    </div>
-  );
 };
 
 export default WelcomeComponent;

@@ -40,7 +40,7 @@
     background-color: var(--header-bg-color);
     position: fixed;
     top: 0;
-    z-index: 999999;
+    z-index: 999;
 }
 
 .header .container.header-container {
@@ -162,14 +162,17 @@
 }
 
 /* category-container */
+/* Base category container */
 .category-container {
     position: relative;
 }
 
-.category-container:hover .categories {
+/* Show categories on hover */
+.category-container:hover .categories-wrapper {
     display: block;
 }
 
+/* Invisible bridge to prevent dropdown close */
 .category-container::after {
     content: "";
     position: absolute;
@@ -177,11 +180,10 @@
     left: 0;
     width: 100%;
     height: 20px;
-    /* Độ dày của cây cầu */
     z-index: 9;
-    /* Đặt dưới danh sách để không che nội dung */
 }
 
+/* Category button styling */
 .category-btn {
     background-color: #d9d9d92d;
     display: flex;
@@ -210,22 +212,40 @@
     font-weight: 600;
 }
 
-.categories {
+/* Wrapper for categories */
+.categories-wrapper {
     display: none;
     position: absolute;
+    margin-top: 20px;
+    z-index: 10;
+}
+
+/* Both main and subcategories panels share identical styling */
+.categories {
     width: max-content;
+    min-width: 180px;
     list-style-type: none;
     background-color: var(--white-text-color);
     padding-left: 0;
     margin-bottom: 0;
     box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
     border-radius: 6px;
-    margin-top: 20px;
 }
 
+/* Main categories panel */
+.categories:first-child {
+    position: relative;
+}
+
+/* Category items */
 .category {
     padding: 6px 10px;
     border-radius: 6px;
+    position: relative;
+}
+
+.category.active {
+    background-color: #d9d9d967;
 }
 
 .category:last-child {
@@ -237,7 +257,33 @@
     cursor: pointer;
 }
 
+/* Flex container for category content */
+.category-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
 
+/* Arrow indicator for categories with children */
+.has-children {
+    margin-left: 8px;
+    font-size: 10px;
+    color: #666;
+}
+
+/* Flex container for category content */
+.category-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* Arrow indicator for categories with children */
+.has-children {
+    margin-left: 8px;
+    font-size: 10px;
+    color: #666;
+}
 
 /* search */
 .search {
@@ -273,7 +319,7 @@
     width: 14px;
 }
 
-/* 
+/*
 /* notification */
 .notification {
     min-width: 200px;
