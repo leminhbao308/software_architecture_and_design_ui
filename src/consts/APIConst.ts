@@ -7,6 +7,7 @@ const APIConst = {
   GET_PRODUCT_BY_ID: "/products",
   SEARCH_PRODUCT: "/products/search",
   GET_USER_INFO: "/auth/token/userinfo",
+  GET_CART: "/cart"
 };
 
 export default APIConst;

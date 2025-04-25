@@ -12,8 +12,10 @@ interface CardContainerCoreProps {
     className?: string,
     bodyStyle?: React.CSSProperties,
     titleStyle?: React.CSSProperties,
-    button: {
+    buttonStyle?: React.CSSProperties,
+    button?: {
         show: boolean,
+        type?: "link" | "text" | "default" | "primary" | "dashed",
         title: string,
         onClick?: MouseEventHandler
     }
@@ -27,9 +29,11 @@ const CardContainerCore: React.FC<CardContainerCoreProps> = (
         className,
         bodyStyle = {padding: 20},
         titleStyle = {},
+        buttonStyle = {},
         button = {
             show: false,
             title: "Button",
+            type: "text",
             onClick: () => {}
         }
     }
@@ -64,14 +68,14 @@ const CardContainerCore: React.FC<CardContainerCoreProps> = (
                         {button.show &&
                             <Button
                                 size={"large"}
-                                type={"text"}
-                                style={{color: "gray", border: "1px solid gray"}}
+                                type={button.type ? button.type : "default"}
+                                style={buttonStyle}
                                 onClick={button.onClick}
                             >{button.title}</Button>}
                     </Flex>
 
                 }
-                <Divider style={{marginTop: "0px",marginBottom: "5px"}}/>
+                {title && <Divider style={{marginTop: "0px", marginBottom: "5px"}}/>}
                 {_renderChildren()}
             </div>
         </Card>

@@ -13,6 +13,7 @@ const WelcomeComponent = () => {
                 canLoadMore={false}
                 button={{
                     show: true,
+                    type: "default",
                     title: "Xem tất cả",
                     navigateToCategoryId: "0e122d77-bd1c-4602-805b-01bc00a4cfab"
                 }}

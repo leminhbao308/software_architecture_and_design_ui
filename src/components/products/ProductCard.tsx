@@ -91,7 +91,8 @@ const ProductCard: React.FC<ProductCardProps> = ({product, width = 300}) => {
     const renderActionBubble = () => {
         if (product.totalQuantity > 0 && product.status === StatusConst.ACTIVE && isHovered) {
             return (
-                <CardActionItem productId={product.productId}/>
+                <CardActionItem cartId={product.productId} productId={product.productId} productName={product.name} productPrice={product.currentPrice}
+                                productThumbnail={product.thumbnailUrl}/>
             );
         }
         return null;

@@ -19,11 +19,11 @@ const UserService = {
         // console.log(response);
         return response.data;
       } else {
-        console.log("Lấy sản phẩm thất bại");
+        console.log("Lấy thông tin thất bại");
         return [];
       }
     } catch (error) {
-      console.error("get all produtcs is failed", error);
+      console.error("get info failed: ", error);
       return [];
     }
   },

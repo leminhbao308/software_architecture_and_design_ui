@@ -1,10 +1,10 @@
-import { useEffect } from "react";
-import { Button, Space, Dropdown } from "antd";
-import type { MenuProps } from "antd";
-import { MenuOutlined } from "@ant-design/icons";
+import {useEffect} from "react";
+import {Button, Space, Dropdown} from "antd";
+import type {MenuProps} from "antd";
+import {MenuOutlined} from "@ant-design/icons";
 import CategoryService from "../../services/category/CategoryService";
 import useCategoryContext from "../../hooks/useCategoryContext.ts";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 interface CategoryType {
     id: string;
@@ -14,7 +14,7 @@ interface CategoryType {
 }
 
 const CategoryBtn = () => {
-    const { categories, setCategories } = useCategoryContext();
+    const {categories, setCategories} = useCategoryContext();
     const navigate = useNavigate();
 
     const accessToken: string | null =
@@ -57,10 +57,17 @@ const CategoryBtn = () => {
             if (category.children && category.children.length > 0) {
                 return {
                     key: category.id,
-                    label: category.name,
+                    label: (
+                        <span onClick={(e) => {
+                            e.stopPropagation();
+                            handleCategoryClick(category.id);
+                        }}>
+                        {category.name}
+                    </span>
+                    ),
                     popupOffset: [1, 0],
                     children: getMenuItems(category.children),
-                    onClick: () => handleCategoryClick(category.id)
+                    // Remove the onClick here since we're handling it in the label
                 };
             }
             return {
@@ -75,7 +82,6 @@ const CategoryBtn = () => {
     const menuProps: MenuProps = {
         items: getMenuItems(categories),
         style: {
-            // width: '200px',
             boxShadow: '0 2px 8px rgba(0,0,0,0.15)'
         }
     };

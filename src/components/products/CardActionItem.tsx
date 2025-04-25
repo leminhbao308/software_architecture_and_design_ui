@@ -1,17 +1,37 @@
-import {Button, Tooltip} from "antd";
-import {ShoppingCartOutlined} from "@ant-design/icons";
+import { Button, Tooltip, message } from "antd";
+import { ShoppingCartOutlined } from "@ant-design/icons";
 import React from "react";
+import {useCart} from "../../hooks/useCartContext.ts";
 
 interface CardActionItemProps {
-    productId: string
+    cartId:string,
+    productId: string;
+    productName: string;
+    productPrice: number;
+    productThumbnail: string | null;
+    icon?: React.ReactNode;
 }
 
-const CardActionItem: React.FC<CardActionItemProps> = ({productId}) => {
+const CardActionItem: React.FC<CardActionItemProps> = ({
+                                                           cartId,
+                                                           productId,
+                                                           productName,
+                                                           productPrice,
+                                                           productThumbnail,
+                                                           icon
+                                                       }) => {
+    const { addToCart, loading } = useCart();
 
-    function handleAddToCart(e) {
+    const handleAddToCart = async (e: React.MouseEvent) => {
         e.stopPropagation();
-        console.log(`Product id ${productId} is added to cart!`)
-    }
+        try {
+            await addToCart(cartId, productId, productName, productPrice, productThumbnail);
+            message.success(`Đã thêm ${productName} vào giỏ hàng`);
+        } catch (error) {
+            message.error('Không thể thêm sản phẩm vào giỏ hàng');
+            console.error(error)
+        }
+    };
 
     return (
         <div
@@ -33,12 +53,14 @@ const CardActionItem: React.FC<CardActionItemProps> = ({productId}) => {
             <Tooltip title="Thêm vào giỏ hàng" placement="left">
                 <Button
                     type="text"
-                    icon={<ShoppingCartOutlined/>}
+                    icon={icon ? icon : <ShoppingCartOutlined />}
                     size="middle"
                     onClick={handleAddToCart}
+                    loading={loading}
                 />
             </Tooltip>
         </div>
     );
 };
+
 export default CardActionItem;

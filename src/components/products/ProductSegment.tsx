@@ -13,6 +13,7 @@ interface ProductSegmentProps {
     className?: string,
     bodyStyle?: React.CSSProperties,
     titleStyle?: React.CSSProperties,
+    buttonStyle?: React.CSSProperties,
     size?: number,
     canLoadMore?: boolean,
     searchParams?: {
@@ -21,12 +22,15 @@ interface ProductSegmentProps {
         category?: string,
         brand?: string
     },
-    button?: {
-        show: boolean,
-        title: string,
-        onClick?: MouseEventHandler,
-        navigateToCategoryId?: string
-    }
+    button?: ButtonProps
+}
+
+interface ButtonProps {
+    show: boolean,
+    title: string,
+    type?: "link" | "text" | "default" | "primary" | "dashed",
+    onClick?: MouseEventHandler,
+    navigateToCategoryId?: string
 }
 
 interface PaginationInfo {
@@ -47,11 +51,13 @@ const ProductSegment: React.FC<ProductSegmentProps> = (
         className,
         bodyStyle = { padding: 20 },
         titleStyle = {},
+        buttonStyle = {},
         size = 20,
         canLoadMore = true,
         button = {
             show: false,
             title: "Button",
+            type: "default",
             onClick: () => { }
         }
     }) => {
@@ -166,6 +172,7 @@ const ProductSegment: React.FC<ProductSegmentProps> = (
                     style={style}
                     titleStyle={titleStyle}
                     bodyStyle={bodyStyle}
+                    buttonStyle={buttonStyle}
                     className={className}
                     button={button.show ? {
                         ...button,
