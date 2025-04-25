@@ -19,7 +19,6 @@ export const CartProvider: React.FC<CartProviderProps> = ({children}) => {
 
     // Fetch cart on component mount
     useEffect(() => {
-        console.log(userId)
         if (userId) {
             fetchCart();
         }

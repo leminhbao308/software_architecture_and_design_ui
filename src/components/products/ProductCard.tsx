@@ -1,6 +1,6 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {Card, Typography, Space, Badge,} from "antd";
+import {Badge, Card, Space, Typography,} from "antd";
 import StatusConst from "../../consts/StatusConst";
 import {ProductType} from "../../types/ProductType";
 import CardActionItem from "./CardActionItem.tsx";

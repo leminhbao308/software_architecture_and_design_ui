@@ -5,7 +5,7 @@ const WelcomeComponent = () => {
     const currentMonth = new Date().getMonth() + 1;
 
     return (
-        <div style={{marginTop: "150px"}}>
+        <div style={{marginTop: "100px"}}>
             <ProductSegment
                 title={`Laptop Hot Tháng ${currentMonth}`}
                 categoryId={"0e122d77-bd1c-4602-805b-01bc00a4cfab"}

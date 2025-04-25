@@ -1,7 +1,7 @@
 import {ProductType} from "../../types/ProductType.ts";
 import StatusConst from "../../consts/StatusConst.ts";
 import React, {useEffect, useState} from "react";
-import {Row, Col} from "antd";
+import {Col, Row} from "antd";
 import SortComponent from "../sort/SortComponent.tsx";
 import ProductCard from "./ProductCard.tsx";
 

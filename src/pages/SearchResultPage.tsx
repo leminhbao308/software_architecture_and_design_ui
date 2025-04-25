@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
-import { Spin, Empty } from "antd";
+import React, {useEffect, useState} from "react";
+import {useSearchParams} from "react-router-dom";
+import {Empty, Spin} from "antd";
 import ProductSegment from "../components/products/ProductSegment.tsx";
 
 const SearchResultsPage: React.FC = () => {
@@ -41,7 +41,7 @@ const SearchResultsPage: React.FC = () => {
     }, [searchParams]);
 
     return (
-        <div className="container" style={{ marginTop: "150px" }}>
+        <div className="container" style={{ marginTop: "100px" }}>
             <Spin spinning={isLoading}>
                 {(name || sku || category || brand) ? (
                     <ProductSegment

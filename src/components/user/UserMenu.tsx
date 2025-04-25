@@ -1,7 +1,7 @@
 import {useNavigate} from "react-router-dom";
-import {Dropdown, Space, Button, Avatar, Tooltip} from "antd";
 import type {MenuProps} from "antd";
-import {UserOutlined, LogoutOutlined} from "@ant-design/icons";
+import {Avatar, Dropdown, Tooltip} from "antd";
+import {LogoutOutlined, UserOutlined} from "@ant-design/icons";
 import PathConst from "../../consts/PathConst";
 import {logout} from "../../services/auth/AuthService";
 import useUserContext from "../../hooks/useUserContext.ts";
@@ -51,7 +51,7 @@ const UserMenu = () => {
                 <Avatar
                     size={48}
                     style={{background: "gray", cursor: "pointer"}}
-                    icon={<UserOutlined />} />
+                    icon={<UserOutlined/>}/>
             </Tooltip>
         </Dropdown>
     );

@@ -1,5 +1,5 @@
-import { Button, Tooltip, message } from "antd";
-import { ShoppingCartOutlined } from "@ant-design/icons";
+import {Button, message, Tooltip} from "antd";
+import {ShoppingCartOutlined} from "@ant-design/icons";
 import React from "react";
 import {useCart} from "../../hooks/useCartContext.ts";
 

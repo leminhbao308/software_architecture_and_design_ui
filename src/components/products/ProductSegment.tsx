@@ -1,10 +1,10 @@
-import React, { MouseEventHandler, useEffect, useState } from "react";
+import React, {MouseEventHandler, useEffect, useState} from "react";
 import CardContainerCore from "../layouts/CardContainerCore.tsx";
 import ProductTable from "./ProductTable.tsx";
-import { Button, Spin } from "antd";
-import { ProductType } from "../../types/ProductType.ts";
+import {Button, Spin} from "antd";
+import {ProductType} from "../../types/ProductType.ts";
 import ProductService from "../../services/product/ProductService.ts";
-import { useNavigate } from "react-router-dom";
+import {useNavigate} from "react-router-dom";
 
 interface ProductSegmentProps {
     categoryId?: string,

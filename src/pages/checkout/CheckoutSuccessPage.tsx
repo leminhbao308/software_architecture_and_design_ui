@@ -1,11 +1,13 @@
-import React, { useEffect, useState } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
-import { Card, Typography, Button, Result, Spin, Descriptions, Divider } from 'antd';
-import { CheckCircleFilled, ShoppingOutlined, FileTextOutlined } from '@ant-design/icons';
+import React, {useEffect, useState} from 'react';
+import {useNavigate, useSearchParams} from 'react-router-dom';
+import {Button, Card, Descriptions, Divider, Result, Spin, Typography} from 'antd';
+import {CheckCircleFilled, FileTextOutlined, ShoppingOutlined} from '@ant-design/icons';
 import useUserContext from "../../hooks/useUserContext.ts";
 import {getAccessToken} from "../../utils/tokenUtils.ts";
 import PaymentService from "../../services/cart/PaymentService.ts";
 import {formatPrice} from "../../utils/formatUtils.tsx";
+import {OrderType} from "../../types/order/OrderType.ts";
+import ProductGrid from "../../components/products/ProductGrid.tsx";
 
 const { Title, Text } = Typography;
 
@@ -18,7 +20,7 @@ const CheckoutSuccessPage: React.FC = () => {
     const orderCode = searchParams.get('orderCode') || sessionStorage.getItem('lastOrderCode');
 
     const [loading, setLoading] = useState(true);
-    const [orderDetails, setOrderDetails] = useState<any>(null);
+    const [orderDetails, setOrderDetails] = useState<OrderType|null>(null);
     const [error, setError] = useState<string | null>(null);
 
     const token = getAccessToken();
@@ -73,7 +75,7 @@ const CheckoutSuccessPage: React.FC = () => {
     };
 
     const handleViewOrders = () => {
-        navigate('/orders');
+        navigate(`/orders/${orderId}`);
     };
 
     if (loading) {
@@ -86,7 +88,7 @@ const CheckoutSuccessPage: React.FC = () => {
 
     if (error || !orderDetails) {
         return (
-            <div className="container" style={{ marginTop: '150px' }}>
+            <div className="container" style={{ marginTop: '100px' }}>
                 <Result
                     status="error"
                     title="Có lỗi xảy ra"
@@ -103,7 +105,7 @@ const CheckoutSuccessPage: React.FC = () => {
 
     // Success content
     return (
-        <div className="container" style={{ marginTop: '150px' }}>
+        <div className="container" style={{ marginTop: '100px' }}>
             <Card>
                 <Result
                     icon={<CheckCircleFilled style={{ color: '#52c41a' }} />}
@@ -146,32 +148,7 @@ const CheckoutSuccessPage: React.FC = () => {
                 <Divider />
 
                 <Title level={4}>Sản phẩm đã đặt</Title>
-                <table style={{ width: '100%', borderCollapse: 'collapse' }}>
-                    <thead>
-                    <tr style={{ borderBottom: '1px solid #f0f0f0' }}>
-                        <th style={{ textAlign: 'left', padding: '10px' }}>Sản phẩm</th>
-                        <th style={{ textAlign: 'center', padding: '10px' }}>Số lượng</th>
-                        <th style={{ textAlign: 'right', padding: '10px' }}>Đơn giá</th>
-                        <th style={{ textAlign: 'right', padding: '10px' }}>Thành tiền</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    {orderDetails.items && orderDetails.items.map((item: any, index: number) => (
-                        <tr key={index} style={{ borderBottom: '1px solid #f0f0f0' }}>
-                            <td style={{ padding: '10px' }}>{item.productName}</td>
-                            <td style={{ textAlign: 'center', padding: '10px' }}>{item.quantity}</td>
-                            <td style={{ textAlign: 'right', padding: '10px' }}>{formatPrice(item.pricePerUnit)}</td>
-                            <td style={{ textAlign: 'right', padding: '10px' }}>{formatPrice(item.pricePerUnit * item.quantity)}</td>
-                        </tr>
-                    ))}
-                    </tbody>
-                    <tfoot>
-                    <tr>
-                        <td colSpan={3} style={{ textAlign: 'right', padding: '10px' }}><strong>Tổng cộng:</strong></td>
-                        <td style={{ textAlign: 'right', padding: '10px' }}><strong>{formatPrice(orderDetails.totalAmount)}</strong></td>
-                    </tr>
-                    </tfoot>
-                </table>
+                <ProductGrid orderDetails={orderDetails}/>
             </Card>
         </div>
     );

@@ -1,4 +1,4 @@
-import React, { useState, ReactNode } from "react";
+import React, {ReactNode, useState} from "react";
 import {CategoryType} from "../types/CategoryType.ts";
 import CategoryContext from "./CategoryContext.ts";
 

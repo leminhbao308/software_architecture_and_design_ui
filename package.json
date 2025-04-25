@@ -17,6 +17,7 @@
     "bootstrap-icons": "^1.11.3",
     "lodash": "^4.17.21",
     "react": "^19.0.0",
+    "react-countup": "^6.5.3",
     "react-dom": "^19.0.0",
     "react-router-dom": "^7.2.0",
     "tailwindcss": "^4.1.4"

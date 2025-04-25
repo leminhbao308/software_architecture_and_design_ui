@@ -1,5 +1,6 @@
 import axios from "axios";
 import APIConst from "../../consts/APIConst.ts";
+import {OrderPayloadType} from "../../types/order/OrderPayloadType.ts";
 
 const PaymentService = {
     /**
@@ -7,7 +8,7 @@ const PaymentService = {
      * @param {Object} orderData - Order data with customer and products information
      * @returns {Promise<Object>} - Payment link and order information
      */
-    checkout: async (access_token, orderData) => {
+    checkout: async (access_token: string, orderData: OrderPayloadType) => {
         try {
             const response = await axios.post(
                 `${APIConst.API_CONTEXT}/orders/checkout`,

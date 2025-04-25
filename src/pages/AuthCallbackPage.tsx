@@ -1,6 +1,6 @@
-import { useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import { useUserContext } from "../context";
+import {useEffect, useState} from "react";
+import {useLocation, useNavigate} from "react-router-dom";
+import {useUserContext} from "../context";
 import UserService from "../services/user/UserService";
 import PathConst from "../consts/PathConst";
 

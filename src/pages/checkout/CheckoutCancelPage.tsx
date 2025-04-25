@@ -1,6 +1,6 @@
 import React, {useEffect} from 'react';
 import {useNavigate, useSearchParams} from 'react-router-dom';
-import {Card, Typography, Button, Result} from 'antd';
+import {Button, Card, Result, Typography} from 'antd';
 import {CloseCircleFilled, ShoppingOutlined} from '@ant-design/icons';
 import PaymentService from "../../services/cart/PaymentService.ts";
 import {getAccessToken} from "../../utils/tokenUtils.ts";
@@ -42,12 +42,8 @@ const CheckoutCancelPage: React.FC = () => {
         navigate('/');
     };
 
-    const handleReturnToCart = () => {
-        navigate('/cart');
-    };
-
     return (
-        <div className="container" style={{marginTop: '150px'}}>
+        <div className="container" style={{marginTop: '100px'}}>
             <Card>
                 <Result
                     icon={<CloseCircleFilled style={{color: '#ff4d4f'}}/>}
@@ -62,13 +58,6 @@ const CheckoutCancelPage: React.FC = () => {
                         </div>
                     }
                     extra={[
-                        <Button
-                            type="primary"
-                            key="console"
-                            onClick={handleReturnToCart}
-                        >
-                            Quay lại giỏ hàng
-                        </Button>,
                         <Button
                             key="buy"
                             icon={<ShoppingOutlined/>}

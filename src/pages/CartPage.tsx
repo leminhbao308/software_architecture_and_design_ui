@@ -1,18 +1,6 @@
 import React from 'react';
-import {
-    Button,
-    Card,
-    Typography,
-    List,
-    Divider,
-    Empty,
-    Spin,
-    message,
-    Modal,
-    Row,
-    Col
-} from 'antd';
-import {ShoppingOutlined, DeleteOutlined, ArrowLeftOutlined} from '@ant-design/icons';
+import {Button, Card, Col, Divider, Empty, List, message, Modal, Row, Spin, Typography} from 'antd';
+import {ArrowLeftOutlined, DeleteOutlined, ShoppingOutlined} from '@ant-design/icons';
 import {useNavigate} from 'react-router-dom';
 import {useCart} from "../hooks/useCartContext.ts";
 import CartItemComponent from "../components/cart/CartItemComponent.tsx";
@@ -20,27 +8,33 @@ import {formatPrice} from "../utils/formatUtils.tsx";
 
 const {Title, Text} = Typography;
 
-const CartPage: React.FC = () => {
+interface CartPageProps {
+    marginTop: boolean
+}
+
+const CartPage: React.FC<CartPageProps> = ({marginTop = true}) => {
     const navigate = useNavigate();
+    const [modal, contextHolder] = Modal.useModal();
     const {cart, loading, error, clearCart, getCartTotal} = useCart();
 
-    const handleClearCart = () => {
-        Modal.confirm({
+    const handleClearCart = async () => {
+        const confirmed = await modal.confirm({
             title: 'Xác nhận xóa giỏ hàng',
             content: 'Bạn có chắc chắn muốn xóa tất cả sản phẩm trong giỏ hàng?',
             okText: 'Xóa',
             cancelText: 'Hủy',
             okButtonProps: {danger: true},
-            onOk: async () => {
-                try {
-                    await clearCart();
-                    message.success('Đã xóa giỏ hàng');
-                } catch (error) {
-                    message.error('Không thể xóa giỏ hàng');
-                    console.error(error)
-                }
-            },
         });
+
+        if (confirmed) {
+            try {
+                await clearCart();
+                message.success('Đã xóa giỏ hàng');
+            } catch (error) {
+                message.error('Không thể xóa giỏ hàng');
+                console.error(error)
+            }
+        }
     };
 
     const handleCheckout = () => {
@@ -81,7 +75,7 @@ const CartPage: React.FC = () => {
 
     if (isCartEmpty) {
         return (
-            <div className={"container"} style={{marginTop: "150px"}}>
+            <div className={"container"} style={{marginTop: marginTop ? "100px" : "0"}}>
                 <Card>
                     <Empty
                         image={Empty.PRESENTED_IMAGE_SIMPLE}
@@ -104,8 +98,9 @@ const CartPage: React.FC = () => {
     const cartTotal = getCartTotal();
     const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
+
     return (
-        <div className={"container"} style={{marginTop: "150px"}}>
+        <div className={"container"} style={{marginTop: marginTop ? "100px" : "0"}}>
             <Row gutter={[24, 24]}>
                 <Col span={24}>
                     <Button
@@ -183,6 +178,7 @@ const CartPage: React.FC = () => {
                     </Card>
                 </Col>
             </Row>
+            {contextHolder}
         </div>
     );
 };

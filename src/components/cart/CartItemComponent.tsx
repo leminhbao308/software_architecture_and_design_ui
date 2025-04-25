@@ -1,6 +1,6 @@
 import React from 'react';
-import { Avatar, Typography, Space, Button, InputNumber } from 'antd';
-import { DeleteOutlined, MinusOutlined, PlusOutlined } from '@ant-design/icons';
+import {Avatar, Button, InputNumber, Space, Typography} from 'antd';
+import {DeleteOutlined, MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {useCart} from "../../hooks/useCartContext.ts";
 
 const { Text } = Typography;

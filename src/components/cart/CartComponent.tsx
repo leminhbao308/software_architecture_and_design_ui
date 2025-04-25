@@ -1,10 +1,10 @@
 import React from 'react';
-import { Badge, Dropdown, Button, List, Spin } from 'antd';
-import { ShoppingCartOutlined } from '@ant-design/icons';
-import { useNavigate } from "react-router-dom";
+import {Badge, Button, Dropdown, List, Spin} from 'antd';
+import {ShoppingCartOutlined} from '@ant-design/icons';
+import {useNavigate} from "react-router-dom";
 import CardContainerCore from "../layouts/CardContainerCore.tsx";
 import CartItemComponent from "./CartItemComponent";
-import { formatPrice } from '../../utils/formatUtils';
+import {formatPrice} from '../../utils/formatUtils';
 import {useCart} from "../../hooks/useCartContext.ts"; // Utility for formatting price
 
 const CartComponent: React.FC = () => {
@@ -19,13 +19,15 @@ const CartComponent: React.FC = () => {
         <div style={{ width: 320 }}>
             <CardContainerCore
                 title="Giỏ hàng"
-                titleStyle={{ fontSize: '18px', margin: 0 }}
+                titleStyle={{ fontSize: '18px', alignItems: "center", marginBottom: "0"}}
                 bodyStyle={{ padding: '0 10px' }}
                 style={{ boxShadow: 'none', cursor: 'default' }}
+                buttonStyle={{ alignItems: "center"}}
                 button={{
                     show: true,
                     type: "link",
                     title: "Xem tất cả",
+                    disabled: getCartItemsCount() === 0,
                     onClick: handleViewCart
                 }}
             >
@@ -64,7 +66,6 @@ const CartComponent: React.FC = () => {
             placement="bottomRight"
             trigger={['hover', 'click']}
             arrow
-            title={"Giỏ hàng"}
         >
             <Badge count={cartItemCount} size="small" offset={[-5, 5]}>
                 <Button

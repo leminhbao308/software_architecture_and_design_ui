@@ -1,7 +1,7 @@
-import { Link, useLocation } from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 import Logo from "../../assets/devicer-white.png";
 import PathConst from "../../consts/PathConst";
-import { isAuthenticated } from "../../services/auth/AuthService";
+import {isAuthenticated} from "../../services/auth/AuthService";
 import CategoryBtn from "../category/CategoryComponent";
 import SearchInput from "../SearchInput";
 import CartComponent from "../cart/CartComponent";

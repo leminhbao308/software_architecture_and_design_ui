@@ -1,6 +1,6 @@
 import ProductSegment from "../../components/products/ProductSegment.tsx";
 import React, {useEffect, useState} from "react";
-import { useParams } from "react-router-dom";
+import {useParams} from "react-router-dom";
 import useCategoryInfo from "../../hooks/useCategoryInfo.ts";
 import useCategoryContext from "../../hooks/useCategoryContext.ts";
 
@@ -24,11 +24,11 @@ const ProductsPage: React.FC = () => {
     }, [categoryId, categories, getCategoryNameById]);
 
     if (!categoryId) {
-        return <div className="container" style={{marginTop: "150px"}}>Category not found</div>;
+        return <div className="container" style={{marginTop: "100px"}}>Category not found</div>;
     }
 
     return (
-        <div className={"container"} style={{marginTop: "150px"}}>
+        <div className={"container"} style={{marginTop: "100px"}}>
             <ProductSegment
                 title={`Danh Sách Sản Phẩm ${categoryName}`}
                 categoryId={categoryId}

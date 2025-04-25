@@ -1,5 +1,4 @@
-import {Button, Card, Divider, Flex} from 'antd';
-import {Typography} from "antd";
+import {Button, Card, Divider, Flex, Typography} from 'antd';
 import React, {MouseEventHandler} from "react";
 
 
@@ -17,6 +16,7 @@ interface CardContainerCoreProps {
         show: boolean,
         type?: "link" | "text" | "default" | "primary" | "dashed",
         title: string,
+        disabled?: boolean,
         onClick?: MouseEventHandler
     }
 }
@@ -34,6 +34,7 @@ const CardContainerCore: React.FC<CardContainerCoreProps> = (
             show: false,
             title: "Button",
             type: "text",
+            disabled: false,
             onClick: () => {}
         }
     }
@@ -60,8 +61,8 @@ const CardContainerCore: React.FC<CardContainerCoreProps> = (
         >
             <div>
                 {title &&
-                    <Flex justify={button.show ? "space-between" : "flex-start"} align={"top"}>
-                        <Title level={2} style={titleStyle}
+                    <Flex justify={button.show ? "space-between" : "flex-start"} align={"center"} >
+                        <Title level={2} style={{...titleStyle}}
                         >
                             {title}
                         </Title>
@@ -69,8 +70,9 @@ const CardContainerCore: React.FC<CardContainerCoreProps> = (
                             <Button
                                 size={"large"}
                                 type={button.type ? button.type : "default"}
-                                style={buttonStyle}
+                                style={{...buttonStyle}}
                                 onClick={button.onClick}
+                                disabled={button.disabled}
                             >{button.title}</Button>}
                     </Flex>
 

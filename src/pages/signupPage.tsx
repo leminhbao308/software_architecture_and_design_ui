@@ -1,5 +1,5 @@
-import { Link, useNavigate } from "react-router-dom";
-import { useState, useEffect } from "react";
+import {Link, useNavigate} from "react-router-dom";
+import {useEffect, useState} from "react";
 import AssetsConstant from "../consts/AssetsConstant";
 import SignUpService from "../services/auth/SignUpService";
 import PathConst from "../consts/PathConst";

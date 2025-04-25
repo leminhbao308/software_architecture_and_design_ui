@@ -1,6 +1,6 @@
 import {useEffect} from "react";
-import {Button, Space, Dropdown} from "antd";
 import type {MenuProps} from "antd";
+import {Button, Dropdown, Space} from "antd";
 import {MenuOutlined} from "@ant-design/icons";
 import CategoryService from "../../services/category/CategoryService";
 import useCategoryContext from "../../hooks/useCategoryContext.ts";

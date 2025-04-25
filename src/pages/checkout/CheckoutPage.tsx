@@ -1,29 +1,18 @@
-import React, { useState, useEffect } from 'react';
-import {
-    Form,
-    Input,
-    Button,
-    Card,
-    Typography,
-    List,
-    Divider,
-    Spin,
-    message,
-    Row,
-    Col,
-    Steps
-} from 'antd';
-import { ShoppingCartOutlined, UserOutlined, CreditCardOutlined, ArrowLeftOutlined } from '@ant-design/icons';
-import { useNavigate } from 'react-router-dom';
+import React, {useEffect, useState} from 'react';
+import {Button, Card, Col, Divider, Form, Input, List, message, Row, Spin, Steps, Typography} from 'antd';
+import {ArrowLeftOutlined, CreditCardOutlined, ShoppingCartOutlined, UserOutlined} from '@ant-design/icons';
+import {useNavigate} from 'react-router-dom';
 import useUserContext from "../../hooks/useUserContext.ts";
 import {useCart} from "../../hooks/useCartContext.ts";
 import PaymentService from "../../services/cart/PaymentService.ts";
 import {getAccessToken} from "../../utils/tokenUtils.ts";
 import CartItemComponent from "../../components/cart/CartItemComponent.tsx";
 import {formatPrice} from "../../utils/formatUtils.tsx";
+import {OrderItemType} from "../../types/order/OrderItemType.ts";
+import {OrderPayloadType} from "../../types/order/OrderPayloadType.ts";
 
-const { Title, Text } = Typography;
-const { Step } = Steps;
+const {Title, Text} = Typography;
+const {Step} = Steps;
 
 interface CheckoutFormValues {
     customerName: string;
@@ -35,10 +24,10 @@ interface CheckoutFormValues {
 const CheckoutPage: React.FC = () => {
     const navigate = useNavigate();
     const [form] = Form.useForm();
-    const { userInfo: currentUser } = useUserContext();
-    const { cart, loading, clearCart, getCartTotal } = useCart();
+    const {userInfo: currentUser} = useUserContext();
+    const {cart, loading, clearCart, getCartTotal} = useCart();
     const [isProcessing, setIsProcessing] = useState(false);
-    const [currentStep, setCurrentStep] = useState(0);
+    const [currentStep,] = useState(1);
 
     const token = getAccessToken();
 
@@ -68,15 +57,17 @@ const CheckoutPage: React.FC = () => {
 
         try {
             // Convert cart items to order items
-            const orderItems = Object.values(cart.items).map(item => ({
+            const orderItems: OrderItemType[] = Object.values(cart.items).map(item => ({
                 productId: item.productId,
                 productName: item.productName,
                 quantity: item.quantity,
-                pricePerUnit: item.price
+                pricePerUnit: item.price,
+                totalPrice: item.quantity * item.price
             }));
 
             // Create order request
-            const orderRequest = {
+            const orderRequest: OrderPayloadType = {
+                userId: currentUser ? currentUser.sub : "",
                 customerName: values.customerName,
                 customerEmail: values.customerEmail,
                 customerPhone: values.customerPhone,
@@ -109,8 +100,8 @@ const CheckoutPage: React.FC = () => {
 
     if (loading) {
         return (
-            <div style={{ display: 'flex', justifyContent: 'center', padding: '40px' }}>
-                <Spin size="large" />
+            <div style={{display: 'flex', justifyContent: 'center', padding: '40px'}}>
+                <Spin size="large"/>
             </div>
         );
     }
@@ -120,11 +111,11 @@ const CheckoutPage: React.FC = () => {
     const totalItems = cartItems.reduce((total, item) => total + item.quantity, 0);
 
     return (
-        <div className="container" style={{ marginTop: '150px' }}>
+        <div className="container" style={{marginTop: '100px'}}>
             <Row gutter={[24, 24]}>
                 <Col span={24}>
                     <Button
-                        icon={<ArrowLeftOutlined />}
+                        icon={<ArrowLeftOutlined/>}
                         onClick={handleBack}
                     >
                         Quay lại giỏ hàng
@@ -132,10 +123,10 @@ const CheckoutPage: React.FC = () => {
                 </Col>
 
                 <Col span={24}>
-                    <Steps current={currentStep} style={{ marginBottom: '24px' }}>
-                        <Step title="Giỏ hàng" icon={<ShoppingCartOutlined />} />
-                        <Step title="Thông tin đặt hàng" icon={<UserOutlined />} />
-                        <Step title="Thanh toán" icon={<CreditCardOutlined />} />
+                    <Steps current={currentStep} style={{marginBottom: '24px'}}>
+                        <Step title="Giỏ hàng" icon={<ShoppingCartOutlined/>}/>
+                        <Step title="Thông tin đặt hàng" icon={<UserOutlined/>}/>
+                        <Step title="Thanh toán" icon={<CreditCardOutlined/>}/>
                     </Steps>
                 </Col>
 
@@ -155,37 +146,37 @@ const CheckoutPage: React.FC = () => {
                             <Form.Item
                                 name="customerName"
                                 label="Họ và tên"
-                                rules={[{ required: true, message: 'Vui lòng nhập họ tên' }]}
+                                rules={[{required: true, message: 'Vui lòng nhập họ tên'}]}
                             >
-                                <Input placeholder="Nhập họ và tên" />
+                                <Input placeholder="Nhập họ và tên"/>
                             </Form.Item>
 
                             <Form.Item
                                 name="customerEmail"
                                 label="Email"
                                 rules={[
-                                    { required: true, message: 'Vui lòng nhập email' },
-                                    { type: 'email', message: 'Email không hợp lệ' }
+                                    {required: true, message: 'Vui lòng nhập email'},
+                                    {type: 'email', message: 'Email không hợp lệ'}
                                 ]}
                             >
-                                <Input placeholder="Nhập địa chỉ email" />
+                                <Input placeholder="Nhập địa chỉ email"/>
                             </Form.Item>
 
                             <Form.Item
                                 name="customerPhone"
                                 label="Số điện thoại"
                                 rules={[
-                                    { required: true, message: 'Vui lòng nhập số điện thoại' },
-                                    { pattern: /^[0-9]{10}$/, message: 'Số điện thoại không hợp lệ' }
+                                    {required: true, message: 'Vui lòng nhập số điện thoại'},
+                                    {pattern: /^[0-9]{10}$/, message: 'Số điện thoại không hợp lệ'}
                                 ]}
                             >
-                                <Input placeholder="Nhập số điện thoại" />
+                                <Input placeholder="Nhập số điện thoại"/>
                             </Form.Item>
 
                             <Form.Item
                                 name="customerAddress"
                                 label="Địa chỉ giao hàng"
-                                rules={[{ required: true, message: 'Vui lòng nhập địa chỉ giao hàng' }]}
+                                rules={[{required: true, message: 'Vui lòng nhập địa chỉ giao hàng'}]}
                             >
                                 <Input.TextArea
                                     rows={3}
@@ -195,7 +186,7 @@ const CheckoutPage: React.FC = () => {
                         </Form>
                     </Card>
 
-                    <Card title="Sản phẩm" style={{ marginTop: '20px' }}>
+                    <Card title="Sản phẩm" style={{marginTop: '20px'}}>
                         <List
                             itemLayout="horizontal"
                             dataSource={cartItems}
@@ -218,28 +209,28 @@ const CheckoutPage: React.FC = () => {
                 <Col xs={24} lg={8}>
                     <Card>
                         <Title level={4}>Tổng đơn hàng</Title>
-                        <Divider />
+                        <Divider/>
 
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
                             <Text>Số lượng sản phẩm:</Text>
                             <Text>{totalItems}</Text>
                         </div>
 
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
                             <Text>Tạm tính:</Text>
                             <Text>{formatPrice(cartTotal)}</Text>
                         </div>
 
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '10px' }}>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '10px'}}>
                             <Text>Phí vận chuyển:</Text>
                             <Text>{formatPrice(0)}</Text>
                         </div>
 
-                        <Divider />
+                        <Divider/>
 
-                        <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '20px' }}>
+                        <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: '20px'}}>
                             <Text strong>Tổng cộng:</Text>
-                            <Title level={4} style={{ margin: 0, color: '#ff4d4f' }}>{formatPrice(cartTotal)}</Title>
+                            <Title level={4} style={{margin: 0, color: '#ff4d4f'}}>{formatPrice(cartTotal)}</Title>
                         </div>
 
                         <Button
@@ -252,7 +243,7 @@ const CheckoutPage: React.FC = () => {
                             Đặt hàng và thanh toán
                         </Button>
 
-                        <div style={{ marginTop: '20px', fontSize: '12px', color: '#999' }}>
+                        <div style={{marginTop: '20px', fontSize: '12px', color: '#999'}}>
                             <p>Bằng cách nhấn "Đặt hàng và thanh toán", bạn đồng ý với Điều khoản dịch vụ và Chính sách bảo mật của chúng tôi.</p>
                         </div>
                     </Card>
