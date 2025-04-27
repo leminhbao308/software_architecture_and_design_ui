@@ -98,9 +98,9 @@ const LoginPage = () => {
             }
         } catch (error) {
             setErrorMessage(
-                "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin!" + error
+                "Đăng nhập thất bại. Vui lòng kiểm tra lại thông tin!"
             );
-            console.error(errorMessage);
+            console.error(error);
         }
     }
 

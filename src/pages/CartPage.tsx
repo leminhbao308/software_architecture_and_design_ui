@@ -24,6 +24,7 @@ const CartPage: React.FC<CartPageProps> = ({marginTop = true}) => {
             okText: 'Xóa',
             cancelText: 'Hủy',
             okButtonProps: {danger: true},
+            centered: true
         });
 
         if (confirmed) {

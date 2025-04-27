@@ -46,13 +46,6 @@ const OrderDetailPage: React.FC = () => {
         }
     }, [orderId, token, loading, orderDetails, error]);
 
-    // You can use this effect for logging when orderDetails changes
-    useEffect(() => {
-        if (orderDetails) {
-            console.log('Order details loaded:', orderDetails);
-        }
-    }, [orderDetails]);
-
     const getOrderStatusStep = (status: string) => {
         switch (status) {
             case 'AWAITING_PAYMENT':
@@ -85,7 +78,6 @@ const OrderDetailPage: React.FC = () => {
             const details = await OrderService.getOrderDetails(token, orderId);
             setOrderDetails(details);
         } catch (err) {
-            console.error('Failed to cancel order:', err);
             setError('Không thể hủy đơn hàng');
         } finally {
             setLoading(false);

@@ -1,7 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import type {MenuProps} from "antd";
 import {Avatar, Dropdown, Tooltip} from "antd";
-import {LogoutOutlined, UserOutlined} from "@ant-design/icons";
+import {LogoutOutlined, UserOutlined, KeyOutlined} from "@ant-design/icons";
 import PathConst from "../../consts/PathConst";
 import {logout} from "../../services/auth/AuthService";
 import useUserContext from "../../hooks/useUserContext.ts";
@@ -9,6 +9,10 @@ import useUserContext from "../../hooks/useUserContext.ts";
 const UserMenu = () => {
     const navigate = useNavigate();
     const {userInfo} = useUserContext();
+
+    const handleAdminPage = () => {
+        navigate(PathConst.ADMIN_DASHBOARD, {replace: true});
+    }
 
     const handleUserProfile = () => {
         navigate(PathConst.PROFILE, {replace: true});
@@ -20,6 +24,12 @@ const UserMenu = () => {
     };
 
     const items: MenuProps['items'] = [
+        {
+            key: 'adminPage',
+            label: 'Trang thông tin admin',
+            icon: <KeyOutlined />,
+            onClick: handleAdminPage
+        },
         {
             key: 'userInfo',
             label: 'Thông tin khách hàng',
