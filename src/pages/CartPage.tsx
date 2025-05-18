@@ -1,5 +1,5 @@
 import React from 'react';
-import {Button, Card, Col, Divider, Empty, List, message, Modal, Row, Spin, Typography} from 'antd';
+import {Button, Card, Col, Divider, Empty, Input, List, message, Modal, Row, Space, Spin, Typography} from 'antd';
 import {ArrowLeftOutlined, DeleteOutlined, ShoppingOutlined} from '@ant-design/icons';
 import {useNavigate} from 'react-router-dom';
 import {useCart} from "../hooks/useCartContext.ts";
@@ -138,10 +138,20 @@ const CartPage: React.FC<CartPageProps> = ({marginTop = true}) => {
                                         imageUrl={item.productThumbnail || ''}
                                         quantity={item.quantity}
                                         showQuantityControls={true}
+                                        isBigger={true}
                                     />
                                 </List.Item>
                             )}
                         />
+
+                        <Divider/>
+
+                        <Title level={5} style={{marginBottom: "10px"}}>Mã giảm giá (nếu có)</Title>
+                        <Space.Compact style={{width: '50%', height: "max-content"}}>
+                            <Input placeholder="Nhập mã giảm giá của bạn"/>
+                            <Button type="primary" size={"large"}>Sử dụng</Button>
+                        </Space.Compact>
+                        <Text style={{marginLeft: "15px"}}>Bạn được giảm {<b>5%</b>} giá trị đơn hàng</Text>
                     </Card>
                 </Col>
 

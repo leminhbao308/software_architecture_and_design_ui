@@ -21,7 +21,7 @@ const AppContent = () => {
     const location = useLocation();
 
     // Kiểm tra nếu đường dẫn bắt đầu bằng admin dashboard thì ẩn Header
-    const isAdminPage = location.pathname.startsWith(PathConst.ADMIN_DASHBOARD);
+    const isAdminPage = location.pathname.startsWith("/admin");
 
     return (
         <>

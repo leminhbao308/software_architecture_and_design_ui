@@ -1,8 +1,6 @@
-import {useEffect} from "react";
 import type {MenuProps} from "antd";
-import {Button, Dropdown, Space} from "antd";
+import {Button, Dropdown, Space, Spin} from "antd";
 import {MenuOutlined} from "@ant-design/icons";
-import CategoryService from "../../services/category/CategoryService";
 import useCategoryContext from "../../hooks/useCategoryContext.ts";
 import {useNavigate} from "react-router-dom";
 
@@ -14,37 +12,9 @@ interface CategoryType {
 }
 
 const CategoryBtn = () => {
-    const {categories, setCategories} = useCategoryContext();
+    // Get categories and loading state from context
+    const {categories, loading} = useCategoryContext();
     const navigate = useNavigate();
-
-    const accessToken: string | null =
-        localStorage.getItem("access_token") ||
-        sessionStorage.getItem("access_token");
-
-    useEffect(() => {
-        const fetchCategories = async () => {
-            if (!accessToken) {
-                console.log("AccessToken không tồn tại");
-                return;
-            }
-
-            try {
-                const data = await CategoryService.getAllCategory(accessToken);
-                const datas = data.data;
-                if (Array.isArray(datas)) {
-                    setCategories(datas);
-                } else {
-                    console.error("Dữ liệu API không phải là mảng:", datas);
-                    setCategories([]);
-                }
-            } catch (error) {
-                console.error("Lấy danh mục thất bại:", error);
-                setCategories([]);
-            }
-        };
-
-        fetchCategories();
-    }, [accessToken, setCategories]);
 
     // Handle category item click
     const handleCategoryClick = (categoryId: string) => {
@@ -62,12 +32,11 @@ const CategoryBtn = () => {
                             e.stopPropagation();
                             handleCategoryClick(category.id);
                         }}>
-                        {category.name}
-                    </span>
+                            {category.name}
+                        </span>
                     ),
                     popupOffset: [1, 0],
                     children: getMenuItems(category.children),
-                    // Remove the onClick here since we're handling it in the label
                 };
             }
             return {
@@ -91,11 +60,12 @@ const CategoryBtn = () => {
             menu={menuProps}
             placement="bottomLeft"
             trigger={['click', 'hover']}
+            disabled={loading || categories.length === 0}
         >
             <Button
                 size={"large"}
                 type="primary"
-                icon={<MenuOutlined/>}
+                icon={loading ? <Spin size="small"/> : <MenuOutlined/>}
                 iconPosition={"start"}
                 style={{display: 'flex', alignItems: 'center', fontWeight: '500', background: "gray"}}
             >

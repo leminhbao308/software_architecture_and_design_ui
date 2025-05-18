@@ -3,7 +3,7 @@ import {Avatar, Button, InputNumber, Space, Typography} from 'antd';
 import {DeleteOutlined, MinusOutlined, PlusOutlined} from '@ant-design/icons';
 import {useCart} from "../../hooks/useCartContext.ts";
 
-const { Text } = Typography;
+const {Text} = Typography;
 
 interface CartItemProps {
     id: string;
@@ -12,7 +12,9 @@ interface CartItemProps {
     imageUrl: string;
     quantity: number;
     showQuantityControls?: boolean;
+    isBigger?: boolean;
 }
+
 
 const CartItemComponent: React.FC<CartItemProps> = ({
                                                         id,
@@ -20,9 +22,10 @@ const CartItemComponent: React.FC<CartItemProps> = ({
                                                         price,
                                                         imageUrl,
                                                         quantity,
-                                                        showQuantityControls = false
+                                                        showQuantityControls = false,
+                                                        isBigger = false
                                                     }) => {
-    const { removeFromCart, updateQuantity, loading } = useCart();
+    const {removeFromCart, updateQuantity, loading} = useCart();
 
     const handleRemoveItem = (e: React.MouseEvent) => {
         e.stopPropagation();
@@ -47,36 +50,43 @@ const CartItemComponent: React.FC<CartItemProps> = ({
         }
     };
 
+    const flexAlign = isBigger ? "top" : "center"
+    const flexGap = isBigger ? 40 : 16;
+
+    const productTitleStyle = isBigger ? {fontWeight: 500, fontSize: 18} : {fontWeight: 500}
+    const productPriceStyle = isBigger ? {fontSize: 18} : {}
+    const productQuantityStyle = isBigger ? {width: 80, margin: '0 8px'} : {width: 50, margin: '0 8px'}
+
     return (
-        <div style={{ display: 'flex', width: '100%', alignItems: 'center', gap: 8 }}>
+        <div style={{display: 'flex', width: '100%', alignItems: flexAlign, gap: flexGap}}>
             <Avatar
-                size={48}
+                size={isBigger ? 128 : 48}
                 src={imageUrl}
                 shape="square"
             />
-            <div style={{ flex: 1, overflow: 'hidden' }}>
-                <Space direction="vertical" size={0} style={{ width: '100%' }}>
-                    <Text ellipsis style={{ fontWeight: 500 }}>{name}</Text>
-                    <Text type="danger">{price}</Text>
+            <div style={{flex: 1, overflow: 'hidden'}}>
+                <Space direction="vertical" size={0} style={{width: '100%'}}>
+                    <Text ellipsis style={productTitleStyle}>{name}</Text>
+                    <Text type="danger" style={productPriceStyle}>{price}</Text>
                     {showQuantityControls && (
-                        <div style={{ display: 'flex', alignItems: 'center', marginTop: 8 }}>
+                        <div style={{display: 'flex', alignItems: 'center', marginTop: 8}}>
                             <Button
-                                icon={<MinusOutlined />}
-                                size="small"
+                                icon={<MinusOutlined/>}
+                                size={isBigger ? "large" : "small"}
                                 onClick={handleDecrement}
                                 disabled={loading}
                             />
                             <InputNumber
                                 min={1}
-                                size="small"
+                                size={isBigger ? "large" : "small"}
                                 value={quantity}
                                 onChange={handleQuantityChange}
-                                style={{ width: 50, margin: '0 8px' }}
+                                style={productQuantityStyle}
                                 disabled={loading}
                             />
                             <Button
-                                icon={<PlusOutlined />}
-                                size="small"
+                                icon={<PlusOutlined/>}
+                                size={isBigger ? "large" : "small"}
                                 onClick={handleIncrement}
                                 disabled={loading}
                             />
@@ -89,8 +99,8 @@ const CartItemComponent: React.FC<CartItemProps> = ({
             </div>
             <Button
                 type="text"
-                icon={<DeleteOutlined />}
-                size="small"
+                icon={<DeleteOutlined/>}
+                size={isBigger ? "large" : "small"}
                 onClick={handleRemoveItem}
                 loading={loading}
             />
