@@ -1,3 +1,4 @@
+import useCategoryInfo from "../../hooks/useCategoryInfo";
 import {useEffect, useState} from "react";
 import { useCart } from "../../hooks/useCartContext";
 import {useLocation, useNavigate} from "react-router-dom";
@@ -8,6 +9,8 @@ const ProductDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const product = location.state?.product;
+  const { getCategoryNameById } = useCategoryInfo();
+  const categoryName = product?.mainCategoryId ? getCategoryNameById(product.mainCategoryId) : "Unknown";
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
   const [showExpandedImage, setShowExpandedImage] = useState(false);
@@ -64,7 +67,7 @@ const ProductDetail = () => {
       {/* Breadcrumb */}
       <div className="breadcrumb mb-4">
         <span>Categories: </span>
-        <span>Apple Macbook, Laptops</span>
+        <span>{categoryName}</span>
       </div>
 
       {/* Product Details Section */}
