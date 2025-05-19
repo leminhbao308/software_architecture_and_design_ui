@@ -25,7 +25,7 @@ const CardActionItem: React.FC<CardActionItemProps> = ({
     const handleAddToCart = async (e: React.MouseEvent) => {
         e.stopPropagation();
         try {
-            await addToCart(cartId, productId, productName, productPrice, productThumbnail);
+            await addToCart(cartId, productId, productName, productPrice, productThumbnail, 1);
             message.success(`Đã thêm ${productName} vào giỏ hàng`);
         } catch (error) {
             message.error('Không thể thêm sản phẩm vào giỏ hàng');

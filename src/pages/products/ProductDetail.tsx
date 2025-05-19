@@ -1,4 +1,5 @@
 import {useEffect, useState} from "react";
+import { useCart } from "../../hooks/useCartContext";
 import {useLocation, useNavigate} from "react-router-dom";
 import AssetsConstant from "../../consts/AssetsConstant";
 
@@ -10,6 +11,7 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
   const [showExpandedImage, setShowExpandedImage] = useState(false);
+  const { addToCart } = useCart();
 
   const formatPrice = (price: number | undefined) => {
     if (!price) return "N/A";
@@ -42,8 +44,15 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    // TODO: Implement add to cart functionality
-    console.log("Adding to cart:", { product, quantity });
+    if (!product) return;
+    addToCart(
+      product.productId,
+      product.productId,
+      product.name,
+      product.currentPrice,
+      product.thumbnailUrl,
+      quantity
+    );
   };
 
   const toggleExpandImage = () => {
