@@ -11,6 +11,14 @@ const ProductDetail = () => {
   const [activeTab, setActiveTab] = useState("description");
   const [showExpandedImage, setShowExpandedImage] = useState(false);
 
+  const formatPrice = (price: number | undefined) => {
+    if (!price) return "N/A";
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(price);
+  };
+
   useEffect(() => {
     // Disable smooth scrolling temporarily
     document.documentElement.style.scrollBehavior = 'auto';
@@ -73,8 +81,8 @@ const ProductDetail = () => {
 
           {/* Price Section */}
           <div className="price-section">
-            <span className="current-price">${product?.currentPrice}</span>
-            <span className="original-price">${product?.basePrice}</span>
+            <span className="current-price">{formatPrice(product?.currentPrice)}</span>
+            <span className="original-price">{formatPrice(product?.basePrice)}</span>
           </div>
 
           {/* Product Specs Box */}
