@@ -1,4 +1,4 @@
-import {Badge, Button, Flex, Input, Layout, Space} from "antd";
+import {Badge, Button, Flex, Layout, Space} from "antd";
 import {BellOutlined} from "@ant-design/icons";
 import React from "react";
 import UserMenu from "../user/UserMenu.tsx";
@@ -12,7 +12,7 @@ interface HeaderComponentProps {
 const HeaderComponent: React.FC<HeaderComponentProps> = ({currentPage = 'Dashboard'}) => {
     // Map the page keys to display names
     const pageDisplayNames: Record<string, string> = {
-        'dashboard': 'Dashboard',
+        'dashboard': 'Trang chủ',
         'categories': 'Quản Lý Danh Mục',
         'products': 'Quản Lý Sản Phẩm',
         'orders': 'Quản Lý Đơn Hàng',
@@ -38,7 +38,6 @@ const HeaderComponent: React.FC<HeaderComponentProps> = ({currentPage = 'Dashboa
                 </div>
 
                 <Space size="large">
-
 
                     <Badge count={5}>
                         <Button type="text" icon={<BellOutlined/>}/>

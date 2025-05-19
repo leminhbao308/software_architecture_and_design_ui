@@ -7,6 +7,7 @@ export interface ProductType {
   description: string;
   brand: string;
   thumbnailUrl: string;
+  imageUrls?: string[];
 
   mainCategoryId: string;
   additionalCategories: string[];
@@ -19,17 +20,28 @@ export interface ProductType {
   availableQuantity: number;
   reservedQuantity: number;
 
-  priceHistory?: any; // Nếu cần kiểu dữ liệu cụ thể, hãy cập nhật
-  quantityHistory?: any;
+  priceHistory?: PriceHistory[];
+  quantityHistory?: QuantityHistory[];
 
-  additionalAttributes?: {
-    processor?: string;
-    ram?: string;
-    storage?: string;
-    screen_size?: string; // Dấu `?` để cho phép không bắt buộc
-  };
+  additionalAttributes?: Record<string, never>;
 
-  status: string;
+  status: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK" | "DISCONTINUED";
   createdAt: string;
   updatedAt: string;
+}
+
+interface PriceHistory {
+  oldPrice: number;
+  newPrice: number;
+  changeReason: string;
+  changedBy: string;
+  timestamp: string;
+}
+
+interface QuantityHistory {
+  oldQuantity: number;
+  newQuantity: number;
+  changeReason: string;
+  changedBy: string;
+  timestamp: string;
 }

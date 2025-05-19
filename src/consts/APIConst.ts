@@ -2,6 +2,7 @@ const APIConst = {
   API_CONTEXT: "http://localhost:8080/api/v1",
   LOGIN: "/auth/login",
   SIGNUP: "/auth/register",
+    REFRESH_TOKEN: "/auth/refresh-token",
   GET_ALL_PRODUCTS: "/products",
   GET_PRODUCT_BY_ID: "/products",
   SEARCH_PRODUCT: "/products/search",

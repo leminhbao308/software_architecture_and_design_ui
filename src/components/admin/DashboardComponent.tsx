@@ -1,4 +1,4 @@
-import {Card, Col, Row, Statistic, Table, Layout, Typography, Badge} from "antd";
+import {Badge, Card, Col, Layout, Row, Statistic, Table, Typography} from "antd";
 import {AppstoreOutlined, ArrowUpOutlined, ShoppingOutlined} from "@ant-design/icons";
 import {ArcElement, BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, LineElement, PointElement, Title, Tooltip,} from 'chart.js';
 import {Bar, Line, Pie} from "react-chartjs-2";

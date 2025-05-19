@@ -1,12 +1,5 @@
-import {Badge, Menu, Layout} from "antd";
-import {
-    AppstoreOutlined,
-    CreditCardOutlined,
-    DashboardOutlined,
-    OrderedListOutlined,
-    ShoppingOutlined,
-    CloudServerOutlined
-} from "@ant-design/icons";
+import {Badge, Layout, Menu} from "antd";
+import {AppstoreOutlined, CloudServerOutlined, CreditCardOutlined, DashboardOutlined, OrderedListOutlined, ShoppingOutlined} from "@ant-design/icons";
 import React, {useEffect, useState} from "react";
 import AdminService from "../../services/admin/AdminService.ts";
 import {ServiceStatusType} from "../../types/admin/ServiceStatusType.ts";
@@ -140,27 +133,27 @@ const SidebarComponent: React.FC<SidebarComponentProps> = ({onMenuSelect, onSide
                         {
                             key: 'dashboard',
                             icon: <DashboardOutlined/>,
-                            label: 'Dashboard',
+                            label: 'Trang chủ',
                         },
                         {
                             key: 'products',
                             icon: <ShoppingOutlined/>,
-                            label: 'Products',
+                            label: 'Sản phẩm',
                         },
                         {
                             key: 'orders',
                             icon: <OrderedListOutlined/>,
-                            label: 'Orders',
+                            label: "Đơn hàng",
                         },
                         {
                             key: 'categories',
                             icon: <AppstoreOutlined/>,
-                            label: 'Categories',
+                            label: 'Danh mục',
                         },
                         {
                             key: 'payments',
                             icon: <CreditCardOutlined/>,
-                            label: 'Payments',
+                            label: 'Thanh toán',
                         },
                     ]}
                 />

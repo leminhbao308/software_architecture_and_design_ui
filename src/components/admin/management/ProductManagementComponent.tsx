@@ -1,42 +1,27 @@
-import React, {useState, useEffect} from "react";
+import React, {useEffect, useState} from "react";
 import {
-    Layout,
-    Table,
-    Button,
-    Input,
-    Modal,
-    Form,
-    Select,
-    notification,
-    Spin,
-    Card,
-    Typography,
-    Space,
-    Empty,
     Alert,
-    Tag,
-    Tabs,
-    Tooltip,
+    Badge,
+    Button,
+    Card,
+    Empty,
+    Form,
+    Input,
     InputNumber,
-    Upload,
+    Layout,
+    Modal,
+    notification,
     Popconfirm,
-    Divider,
-    Badge
+    Select,
+    Space,
+    Spin,
+    Table,
+    Tabs,
+    Tag,
+    Typography,
+    Upload
 } from "antd";
-import {
-    PlusOutlined,
-    EditOutlined,
-    DeleteOutlined,
-    SearchOutlined,
-    UploadOutlined,
-    TagsOutlined,
-    DollarOutlined,
-    InboxOutlined,
-    QuestionCircleOutlined,
-    SyncOutlined,
-    EyeOutlined,
-    HistoryOutlined
-} from "@ant-design/icons";
+import {DeleteOutlined, DollarOutlined, EditOutlined, InboxOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
 import useCategoryContext from "../../../hooks/useCategoryContext";
 import ProductService from "../../../services/product/ProductService";
 import {getAccessToken} from "../../../utils/tokenUtils";
@@ -65,18 +50,18 @@ interface QuantityHistory {
 }
 
 interface ProductType {
-    id: string;
-    name: string;
-    description: string;
-    sku: string;
-    brand: string;
-    currentPrice: number;
-    originalPrice: number;
-    discountPercentage: number;
-    currentQuantity: number;
-    mainCategory: string;
-    categories: string[];
-    status: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK" | "DISCONTINUED";
+    id: string; //
+    name: string; //
+    description: string; //
+    sku: string; //
+    brand: string; //
+    currentPrice: number; //
+    originalPrice: number; // basePrice
+    discountPercentage: number; // x
+    currentQuantity: number; // x
+    mainCategory: string; //
+    categories: string[]; // additionalCategories
+    status: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK" | "DISCONTINUED"; //
     imageUrls: string[];
     attributes: Record<string, any>;
     priceHistory: PriceHistory[];

@@ -1,7 +1,7 @@
 import {useNavigate} from "react-router-dom";
 import type {MenuProps} from "antd";
 import {Avatar, Dropdown, Tooltip} from "antd";
-import {LogoutOutlined, UserOutlined, LockOutlined, DisconnectOutlined} from "@ant-design/icons";
+import {DisconnectOutlined, LockOutlined, LogoutOutlined, UserOutlined} from "@ant-design/icons";
 import PathConst from "../../consts/PathConst";
 import {logout} from "../../services/auth/AuthService";
 import useUserContext from "../../hooks/useUserContext.ts";

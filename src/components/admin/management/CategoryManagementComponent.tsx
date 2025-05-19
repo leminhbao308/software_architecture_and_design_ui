@@ -1,14 +1,6 @@
-import React, {useState, useEffect} from "react";
-import {Layout, Table, Button, Input, Modal, Form, Select, notification, Spin, Card, Typography, Space, Empty, Alert, Badge, Tooltip} from "antd";
-import {
-    PlusOutlined,
-    EditOutlined,
-    DeleteOutlined,
-    SearchOutlined,
-    FolderOutlined,
-    FolderOpenOutlined,
-    QuestionCircleOutlined
-} from "@ant-design/icons";
+import React, {useEffect, useState} from "react";
+import {Alert, Badge, Button, Card, Empty, Form, Input, Layout, Modal, notification, Select, Space, Spin, Table, Tooltip, Typography} from "antd";
+import {DeleteOutlined, EditOutlined, FolderOpenOutlined, FolderOutlined, PlusOutlined, QuestionCircleOutlined, SearchOutlined} from "@ant-design/icons";
 import useCategoryContext from "../../../hooks/useCategoryContext.ts";
 import {useCategoryCount} from "../../../hooks/useCategoryCount.ts";
 import {CategoryType} from "../../../types/category/CategoryType.ts";

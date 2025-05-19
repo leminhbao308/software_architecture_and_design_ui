@@ -79,15 +79,17 @@ const LoginPage = () => {
             // console.log("Đăng nhập thành công, token:", response.access_token);
 
             // Lưu token vào localStorage nếu "Nhớ phiên đăng nhập" được chọn
-            if (response.data.access_token) {
+            if (response.data.access_token && response.data.refresh_token) {
                 const getUserInfo = await UserService.getUserInfo(
                     response.data.access_token
                 );
 
                 if (isRememberSession) {
                     localStorage.setItem("access_token", response.data.access_token);
+                    localStorage.setItem("refresh_token", response.data.refresh_token);
                 } else {
                     sessionStorage.setItem("access_token", response.data.access_token);
+                    sessionStorage.setItem("refresh_token", response.data.refresh_token);
                 }
 
                 setUserId(getUserInfo.data.sub);
