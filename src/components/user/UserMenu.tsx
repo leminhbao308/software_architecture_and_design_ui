@@ -4,6 +4,7 @@ import {Avatar, Dropdown, Tooltip} from "antd";
 import {LogoutOutlined, UserOutlined, LockOutlined, DisconnectOutlined} from "@ant-design/icons";
 import PathConst from "../../consts/PathConst";
 import {logout} from "../../services/auth/AuthService";
+import { isAdmin } from "../../services/auth/AuthService";
 import useUserContext from "../../hooks/useUserContext.ts";
 
 const UserMenu = () => {
@@ -31,8 +32,8 @@ const UserMenu = () => {
 
     // Define menu items based on whether user is on admin page or not
     const items: MenuProps['items'] = [
-        // Show "Admin Page" button only when NOT on admin pages
-        ...(!isAdminPage ? [{
+        // Show "Admin Page" button only when NOT on admin pages and user is admin
+        ...(!isAdminPage && isAdmin() ? [{
             key: 'adminPage',
             label: 'Trang thông tin admin',
             icon: <LockOutlined/>,
