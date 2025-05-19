@@ -56,7 +56,7 @@ const ProductDetail = () => {
         <div className="col-md-6">
           <div className="product-image-container">
             <img
-              src={AssetsConstant.PRODUCTS.IPHONE_16_PRO_MAX}
+              src={product?.thumbnailUrl}
               alt={product?.name}
               className="img-fluid"
               onClick={toggleExpandImage}
@@ -83,7 +83,7 @@ const ProductDetail = () => {
               <tbody>
                 <tr>
                   <td className="info-label">Brand:</td>
-                  <td className="info-value">Apple</td>
+                  <td className="info-value">{product?.brand || "N/A"}</td>
                 </tr>
                 <tr>
                   <td className="info-label">Available Quantity:</td>
@@ -91,15 +91,15 @@ const ProductDetail = () => {
                 </tr>
                 <tr>
                   <td className="info-label">Processor:</td>
-                  <td className="info-value">M2 Pro</td>
+                  <td className="info-value">{product?.additionalAttributes?.processor || "N/A"}</td>
                 </tr>
                 <tr>
                   <td className="info-label">Ram:</td>
-                  <td className="info-value">16GB</td>
+                  <td className="info-value">{product?.additionalAttributes?.ram || "N/A"}</td>
                 </tr>
                 <tr>
                   <td className="info-label">Storage:</td>
-                  <td className="info-value">512 GB</td>
+                  <td className="info-value">{product?.additionalAttributes?.storage || "N/A"}</td>
                 </tr>
               </tbody>
             </table>
@@ -134,7 +134,7 @@ const ProductDetail = () => {
               <img src={AssetsConstant.CLOSE_ICON} alt="close" />
             </button>
             <img
-              src={AssetsConstant.PRODUCTS.IPHONE_16_PRO_MAX}
+              src={product?.thumbnailUrl}
               alt={product?.name}
               className="expanded-image"
             />
