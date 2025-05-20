@@ -15,7 +15,7 @@ const HeaderComponent: React.FC<HeaderComponentProps> = ({currentPage = 'Dashboa
         'dashboard': 'Trang chủ',
         'categories': 'Quản Lý Danh Mục',
         'products': 'Quản Lý Sản Phẩm',
-        'orders': 'Quản Lý Đơn Hàng',
+        'orders': 'Quản Lý Hóa Đơn',
         'payments': 'Quản Lý Thanh Toán'
     };
 
