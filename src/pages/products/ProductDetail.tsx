@@ -1,4 +1,6 @@
+import useCategoryInfo from "../../hooks/useCategoryInfo";
 import {useEffect, useState} from "react";
+import { useCart } from "../../hooks/useCartContext";
 import {useLocation, useNavigate} from "react-router-dom";
 import AssetsConstant from "../../consts/AssetsConstant";
 
@@ -7,9 +9,20 @@ const ProductDetail = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const product = location.state?.product;
+  const { getCategoryNameById } = useCategoryInfo();
+  const categoryName = product?.mainCategoryId ? getCategoryNameById(product.mainCategoryId) : "Unknown";
   const [quantity, setQuantity] = useState(1);
   const [activeTab, setActiveTab] = useState("description");
   const [showExpandedImage, setShowExpandedImage] = useState(false);
+  const { addToCart } = useCart();
+
+  const formatPrice = (price: number | undefined) => {
+    if (!price) return "N/A";
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+    }).format(price);
+  };
 
   useEffect(() => {
     // Disable smooth scrolling temporarily
@@ -34,8 +47,15 @@ const ProductDetail = () => {
   };
 
   const handleAddToCart = () => {
-    // TODO: Implement add to cart functionality
-    console.log("Adding to cart:", { product, quantity });
+    if (!product) return;
+    addToCart(
+      product.productId,
+      product.productId,
+      product.name,
+      product.currentPrice,
+      product.thumbnailUrl,
+      quantity
+    );
   };
 
   const toggleExpandImage = () => {
@@ -47,7 +67,7 @@ const ProductDetail = () => {
       {/* Breadcrumb */}
       <div className="breadcrumb mb-4">
         <span>Categories: </span>
-        <span>Apple Macbook, Laptops</span>
+        <span>{categoryName}</span>
       </div>
 
       {/* Product Details Section */}
@@ -56,7 +76,7 @@ const ProductDetail = () => {
         <div className="col-md-6">
           <div className="product-image-container">
             <img
-              src={AssetsConstant.PRODUCTS.IPHONE_16_PRO_MAX}
+              src={product?.thumbnailUrl}
               alt={product?.name}
               className="img-fluid"
               onClick={toggleExpandImage}
@@ -73,8 +93,8 @@ const ProductDetail = () => {
 
           {/* Price Section */}
           <div className="price-section">
-            <span className="current-price">${product?.currentPrice}</span>
-            <span className="original-price">${product?.basePrice}</span>
+            <span className="current-price">{formatPrice(product?.currentPrice)}</span>
+            <span className="original-price">{formatPrice(product?.basePrice)}</span>
           </div>
 
           {/* Product Specs Box */}
@@ -83,7 +103,7 @@ const ProductDetail = () => {
               <tbody>
                 <tr>
                   <td className="info-label">Brand:</td>
-                  <td className="info-value">Apple</td>
+                  <td className="info-value">{product?.brand || "N/A"}</td>
                 </tr>
                 <tr>
                   <td className="info-label">Available Quantity:</td>
@@ -91,15 +111,15 @@ const ProductDetail = () => {
                 </tr>
                 <tr>
                   <td className="info-label">Processor:</td>
-                  <td className="info-value">M2 Pro</td>
+                  <td className="info-value">{product?.additionalAttributes?.processor || "N/A"}</td>
                 </tr>
                 <tr>
                   <td className="info-label">Ram:</td>
-                  <td className="info-value">16GB</td>
+                  <td className="info-value">{product?.additionalAttributes?.ram || "N/A"}</td>
                 </tr>
                 <tr>
                   <td className="info-label">Storage:</td>
-                  <td className="info-value">512 GB</td>
+                  <td className="info-value">{product?.additionalAttributes?.storage || "N/A"}</td>
                 </tr>
               </tbody>
             </table>
@@ -134,7 +154,7 @@ const ProductDetail = () => {
               <img src={AssetsConstant.CLOSE_ICON} alt="close" />
             </button>
             <img
-              src={AssetsConstant.PRODUCTS.IPHONE_16_PRO_MAX}
+              src={product?.thumbnailUrl}
               alt={product?.name}
               className="expanded-image"
             />
