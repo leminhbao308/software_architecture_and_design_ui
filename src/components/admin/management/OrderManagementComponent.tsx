@@ -8,6 +8,7 @@ import {
   Empty,
   Form,
   Input,
+  Space,
   Spin,
   Table,
   Tag,
@@ -16,7 +17,8 @@ import {
 import { formatPrice } from "../../../utils/formatUtils";
 import OrderDetailModal from "../../popups/OrderDetailModal";
 import { Content } from "antd/es/layout/layout";
-import { SearchOutlined } from "@ant-design/icons";
+import { PlusOutlined, SearchOutlined } from "@ant-design/icons";
+import RevenueReportModal from "../../popups/RevenueReportModal";
 
 const { Title } = Typography;
 
@@ -30,6 +32,8 @@ const OrderManagementComponent: React.FC = () => {
   const [searchCustomerPhone, setSearchCustomerPhone] = useState<string>("");
   const [searchCustomerEmail, setSearchCustomerEmail] = useState<string>("");
   const [filteredOrders, setFilteredOrders] = useState<OrderType[]>([]);
+  const [isReportModalVisible, setIsRevenueReportModalVisible] =
+    useState(false);
 
   const accessToken = getAccessToken();
 
@@ -195,6 +199,10 @@ const OrderManagementComponent: React.FC = () => {
     setFilteredOrders(orders);
   };
 
+  const showReportModal = () => {
+    setIsRevenueReportModalVisible(true);
+  };
+
   return (
     <Content
       style={{
@@ -213,6 +221,16 @@ const OrderManagementComponent: React.FC = () => {
           }}
         >
           <Title level={4}>Quản Lý Sản Phẩm</Title>
+          <Space>
+            <Button
+              type="primary"
+              size="large"
+              icon={<PlusOutlined />}
+              onClick={() => showReportModal()}
+            >
+              Report
+            </Button>
+          </Space>
         </div>
 
         <Form layout="vertical">
@@ -273,6 +291,11 @@ const OrderManagementComponent: React.FC = () => {
           visible={isModalVisible}
           order={selectedOrder}
           onClose={handleCloseModal}
+        />
+        <RevenueReportModal
+          visible={isReportModalVisible}
+          orders={orders}
+          onClose={() => setIsRevenueReportModalVisible(false)}
         />
       </Card>
     </Content>
