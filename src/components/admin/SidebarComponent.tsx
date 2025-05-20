@@ -53,11 +53,11 @@ const SidebarComponent: React.FC<SidebarComponentProps> = ({
 
     fetchServicesStatus();
 
-    // Set up interval to refresh status every minute
-    const intervalId = setInterval(fetchServicesStatus, 60000);
+    // // Set up interval to refresh status every minute
+    // const intervalId = setInterval(fetchServicesStatus, 60000);
 
-    // Clean up interval on component unmount
-    return () => clearInterval(intervalId);
+    // // Clean up interval on component unmount
+    // return () => clearInterval(intervalId);
   }, []);
 
   // Generate service status menu items dynamically based on API response

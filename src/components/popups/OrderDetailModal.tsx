@@ -56,7 +56,7 @@ const OrderDetailModal: React.FC<Props> = ({ visible, order, onClose }) => {
           {order.customerAddress}
         </Descriptions.Item>
         <Descriptions.Item label="Phương thức thanh toán" span={2}>
-          {order.paymentMethod ?? "Chưa thanh toán"}
+          {order.status === "PAID" ? "Thanh toán online" : "Chưa thanh toán"}
         </Descriptions.Item>
         <Descriptions.Item label="Trạng thái" span={2}>
           {order.status}
