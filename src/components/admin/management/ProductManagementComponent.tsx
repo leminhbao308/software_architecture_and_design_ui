@@ -108,6 +108,33 @@ const ProductManagementComponent: React.FC = () => {
     fetchProducts();
   }, [pagination.current, pagination.pageSize]);
 
+  // Retry logic: if products.length === 0 && !loading, retry fetchProducts every 10s, max 5 times
+  useEffect(() => {
+    let retryCount = 0;
+    let retryInterval: ReturnType<typeof setInterval> | undefined;
+
+    if (products.length === 0 && !loading) {
+      retryInterval = setInterval(() => {
+        if (retryCount < 5) {
+          // Only retry if not loading (avoid overlapping requests)
+          if (!loading) {
+            console.log("🔁 Tự động thử lại tải sản phẩm...");
+            fetchProducts();
+            retryCount++;
+          }
+        } else {
+          if (retryInterval) clearInterval(retryInterval);
+        }
+      }, 10000);
+    }
+
+    // Clear interval if products loaded or loading starts or component unmounts
+    return () => {
+      if (retryInterval) clearInterval(retryInterval);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [products.length, loading]);
+
   // Fetch products from the API
   const fetchProducts = async () => {
     setLoading(true);
