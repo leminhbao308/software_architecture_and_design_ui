@@ -148,6 +148,58 @@ const ProductSegment: React.FC<ProductSegmentProps> = (
         fetchProducts();
     }, [currentPage, accessToken, categoryId, searchParams, size]);
 
+    useEffect(() => {
+        let retryInterval: ReturnType<typeof setInterval>;
+
+        if (products.length === 0 && !loading) {
+            retryInterval = setInterval(() => {
+                // console.log("⏳ Đang tự động thử lại lấy sản phẩm...");
+
+                const tryFetch = async () => {
+                    try {
+                        setLoading(true);
+                        let data;
+
+                        if (searchParams && (searchParams.name || searchParams.sku || searchParams.category || searchParams.brand)) {
+                            data = await ProductService.searchProducts(accessToken!, {
+                                ...searchParams,
+                                page: 1,
+                                size
+                            });
+                        } else {
+                            data = await ProductService.getAllProduct(accessToken!, categoryId, 1, size);
+                        }
+
+                        const listProducts = data.content;
+
+                        setPagination({
+                            page: data.page,
+                            size: data.size,
+                            total_elements: data.total_elements,
+                            total_pages: data.total_pages,
+                            first: data.first,
+                            last: data.last
+                        });
+
+                        if (Array.isArray(listProducts)) {
+                            setProducts(listProducts);
+                            clearInterval(retryInterval); // Dừng retry khi đã có data
+                        }
+                    } catch (err) {
+                        console.log("❌ Thử lại thất bại", err);
+                    } finally {
+                        setLoading(false);
+                    }
+                };
+
+                tryFetch();
+            }, 10000); // 10 giây/lần
+        }
+
+        return () => clearInterval(retryInterval);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [products.length, loading]);
+
     // Load more products when the button is clicked
     const handleLoadMore = () => {
         if (!loading && !pagination.last) {
