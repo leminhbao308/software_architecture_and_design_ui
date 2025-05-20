@@ -31,6 +31,7 @@ const SidebarComponent: React.FC<SidebarComponentProps> = ({onMenuSelect, onSide
                 const status = await AdminService.checkServicesStatus(token);
                 setServicesStatus(status);
             } catch (error) {
+                setServicesStatus({data: [], error: true});
                 console.error("Error fetching services status:", error);
             } finally {
                 setIsLoading(false);
@@ -48,6 +49,18 @@ const SidebarComponent: React.FC<SidebarComponentProps> = ({onMenuSelect, onSide
 
     // Generate service status menu items dynamically based on API response
     const generateServiceStatusItems = () => {
+        if (servicesStatus?.error) {
+            return [{
+                key: 'service-loading',
+                label: (
+                    <div style={{padding: '5px 0'}}>
+                        <Badge status="error"/>
+                        <span style={{marginLeft: '8px'}}>Lỗi truy vấn dịch vụ</span>
+                    </div>
+                ),
+            }];
+        }
+
         if (isLoading || !servicesStatus?.data?.length) {
             return [{
                 key: 'service-loading',

@@ -20,8 +20,8 @@ export interface ProductType {
   availableQuantity: number;
   reservedQuantity: number;
 
-  priceHistory?: PriceHistory[];
-  quantityHistory?: QuantityHistory[];
+  priceHistory?: PriceHistoryType[];
+  quantityHistory?: QuantityHistoryType[];
 
   additionalAttributes?: Record<string, never>;
 
@@ -30,7 +30,7 @@ export interface ProductType {
   updatedAt: string;
 }
 
-interface PriceHistory {
+export interface PriceHistoryType {
   oldPrice: number;
   newPrice: number;
   changeReason: string;
@@ -38,7 +38,7 @@ interface PriceHistory {
   timestamp: string;
 }
 
-interface QuantityHistory {
+export interface QuantityHistoryType {
   oldQuantity: number;
   newQuantity: number;
   changeReason: string;

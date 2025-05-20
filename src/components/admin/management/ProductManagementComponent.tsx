@@ -19,54 +19,28 @@ import {
     Tabs,
     Tag,
     Typography,
-    Upload
+    Upload,
 } from "antd";
-import {DeleteOutlined, DollarOutlined, EditOutlined, InboxOutlined, PlusOutlined, SearchOutlined} from "@ant-design/icons";
+import {
+    DeleteOutlined,
+    DollarOutlined,
+    EditOutlined,
+    InboxOutlined,
+    PlusOutlined,
+    SearchOutlined,
+    ReloadOutlined,
+} from "@ant-design/icons";
 import useCategoryContext from "../../../hooks/useCategoryContext";
 import ProductService from "../../../services/product/ProductService";
 import {getAccessToken} from "../../../utils/tokenUtils";
+import {PriceHistoryType, ProductType, QuantityHistoryType} from "../../../types/ProductType.ts";
+import {CategoryType} from "../../../types/category/CategoryType.ts";
 
 const {Content} = Layout;
 const {Option} = Select;
 const {Title, Text} = Typography;
 const {TabPane} = Tabs;
 const {TextArea} = Input;
-
-// Define product interface based on the API structure
-interface PriceHistory {
-    oldPrice: number;
-    newPrice: number;
-    changeReason: string;
-    changedBy: string;
-    timestamp: string;
-}
-
-interface QuantityHistory {
-    oldQuantity: number;
-    newQuantity: number;
-    changeReason: string;
-    changedBy: string;
-    timestamp: string;
-}
-
-interface ProductType {
-    id: string; //
-    name: string; //
-    description: string; //
-    sku: string; //
-    brand: string; //
-    currentPrice: number; //
-    originalPrice: number; // basePrice
-    discountPercentage: number; // x
-    currentQuantity: number; // x
-    mainCategory: string; //
-    categories: string[]; // additionalCategories
-    status: "ACTIVE" | "INACTIVE" | "OUT_OF_STOCK" | "DISCONTINUED"; //
-    imageUrls: string[];
-    attributes: Record<string, any>;
-    priceHistory: PriceHistory[];
-    quantityHistory: QuantityHistory[];
-}
 
 const ProductManagementComponent: React.FC = () => {
     // Access token
@@ -84,7 +58,7 @@ const ProductManagementComponent: React.FC = () => {
     const [pagination, setPagination] = useState({
         current: 1,
         pageSize: 10,
-        total: 0
+        total: 0,
     });
 
     // Modal states
@@ -93,6 +67,17 @@ const ProductManagementComponent: React.FC = () => {
     const [quantityHistoryModalVisible, setQuantityHistoryModalVisible] = useState<boolean>(false);
     const [editingProduct, setEditingProduct] = useState<ProductType | null>(null);
     const [selectedProduct, setSelectedProduct] = useState<ProductType | null>(null);
+    const [priceHistoryLoading, setPriceHistoryLoading] = useState<boolean>(false);
+    const [quantityHistoryLoading, setQuantityHistoryLoading] = useState<boolean>(false);
+    const [priceHistory, setPriceHistory] = useState<PriceHistoryType[]>([]);
+    const [quantityHistory, setQuantityHistory] = useState<QuantityHistoryType[]>([]);
+
+    const formatPrice = (price: number) => {
+        return new Intl.NumberFormat('vi-VN', {
+            style: 'currency',
+            currency: 'VND',
+        }).format(price);
+    };
 
     // Form
     const [form] = Form.useForm();
@@ -103,7 +88,7 @@ const ProductManagementComponent: React.FC = () => {
     const [searchCategory, setSearchCategory] = useState<string>("");
     const [searchBrand, setSearchBrand] = useState<string>("");
 
-    // Fetch products on component mount
+    // Fetch products on component mount and when pagination changes
     useEffect(() => {
         fetchProducts();
     }, [pagination.current, pagination.pageSize]);
@@ -111,11 +96,12 @@ const ProductManagementComponent: React.FC = () => {
     // Fetch products from the API
     const fetchProducts = async () => {
         setLoading(true);
+        setError(null);
         try {
             const response = await ProductService.getAllProduct(
                 accessToken,
                 undefined,
-                pagination.current,
+                pagination.current - 1, // API uses 0-based indexing
                 pagination.pageSize
             );
 
@@ -123,7 +109,7 @@ const ProductManagementComponent: React.FC = () => {
                 setProducts(response.content);
                 setPagination({
                     ...pagination,
-                    total: response.totalElements
+                    total: response.total_elements || 0,
                 });
             } else {
                 setProducts([]);
@@ -131,6 +117,7 @@ const ProductManagementComponent: React.FC = () => {
             }
         } catch (error) {
             console.error("Error fetching products:", error);
+            setProducts([]);
             setError("Failed to fetch products. Please try again.");
         } finally {
             setLoading(false);
@@ -140,21 +127,22 @@ const ProductManagementComponent: React.FC = () => {
     // Handle search
     const handleSearch = async () => {
         setLoading(true);
+        setError(null);
         try {
             const response = await ProductService.searchProducts(accessToken, {
                 name: searchName || undefined,
                 sku: searchSku || undefined,
                 category: searchCategory || undefined,
                 brand: searchBrand || undefined,
-                page: pagination.current,
-                size: pagination.pageSize
+                page: pagination.current - 1, // API uses 0-based indexing
+                size: pagination.pageSize,
             });
 
-            if (response && response.data && response.data.content) {
-                setProducts(response.data.content);
+            if (response && response.content) {
+                setProducts(response.content);
                 setPagination({
                     ...pagination,
-                    total: response.data.totalElements || 0
+                    total: response.totalElements || 0,
                 });
             } else {
                 setProducts([]);
@@ -162,6 +150,7 @@ const ProductManagementComponent: React.FC = () => {
             }
         } catch (error) {
             console.error("Error searching products:", error);
+            setProducts([]);
             setError("Failed to search products. Please try again.");
         } finally {
             setLoading(false);
@@ -174,15 +163,19 @@ const ProductManagementComponent: React.FC = () => {
         setSearchSku("");
         setSearchCategory("");
         setSearchBrand("");
+        setPagination({
+            ...pagination,
+            current: 1,
+        });
         fetchProducts();
     };
 
     // Handle table pagination change
-    const handleTableChange = (pagination: any) => {
+    const handleTableChange = (newPagination: any) => {
         setPagination({
             ...pagination,
-            current: pagination.current,
-            pageSize: pagination.pageSize
+            current: newPagination.current,
+            pageSize: newPagination.pageSize,
         });
     };
 
@@ -191,19 +184,24 @@ const ProductManagementComponent: React.FC = () => {
         if (product) {
             setEditingProduct(product);
 
-            // Format the form values
+            // Format the form values to match the product structure
             form.setFieldsValue({
                 name: product.name,
                 description: product.description,
                 sku: product.sku,
                 brand: product.brand,
+                basePrice: product.basePrice,
                 currentPrice: product.currentPrice,
-                originalPrice: product.originalPrice,
-                currentQuantity: product.currentQuantity,
-                mainCategory: product.mainCategory,
-                categories: product.categories,
+                costPrice: product.costPrice,
+                mainCategoryId: product.mainCategoryId,
+                additionalCategories: product.additionalCategories || [],
                 status: product.status,
-                attributes: product.attributes ? JSON.stringify(product.attributes) : ''
+                availableQuantity: product.availableQuantity,
+                reservedQuantity: product.reservedQuantity || 0,
+                totalQuantity: product.totalQuantity,
+                additionalAttributes: product.additionalAttributes
+                    ? JSON.stringify(product.additionalAttributes)
+                    : "",
             });
         } else {
             setEditingProduct(null);
@@ -218,40 +216,78 @@ const ProductManagementComponent: React.FC = () => {
             const values = await form.validateFields();
 
             // Process attributes if provided
-            if (values.attributes) {
+            if (values.additionalAttributes) {
                 try {
-                    values.attributes = JSON.parse(values.attributes);
+                    values.additionalAttributes = JSON.parse(values.additionalAttributes);
                 } catch (err) {
                     notification.error({
                         message: "Invalid attributes format",
-                        description: "Please enter valid JSON format for attributes"
+                        description: "Please enter valid JSON format for attributes",
                     });
                     return;
                 }
             }
 
-            // TODO: Implement create/update product API call
-            // This is a placeholder to demonstrate how it would work
             if (editingProduct) {
                 // Update existing product
-                // const updatedProduct = await ProductService.updateProduct(accessToken, editingProduct.id, values);
-                notification.success({message: "Product updated successfully"});
+                const updatedProduct = await ProductService.updateProduct(accessToken, editingProduct.productId, {
+                    ...editingProduct,
+                    ...values,
+                });
+
+                if (updatedProduct) {
+                    notification.success({message: "Product updated successfully"});
+                    fetchProducts();
+                } else {
+                    notification.error({message: "Failed to update product"});
+                }
             } else {
                 // Create new product
-                // const newProduct = await ProductService.createProduct(accessToken, values);
-                notification.success({message: "Product created successfully"});
+                const newProduct = await ProductService.createProduct(accessToken, values);
+
+                if (newProduct) {
+                    notification.success({message: "Product created successfully"});
+                    fetchProducts();
+                } else {
+                    notification.error({message: "Failed to create product"});
+                }
             }
 
-            // Refresh products
-            fetchProducts();
             setProductModalVisible(false);
             form.resetFields();
         } catch (error) {
             notification.error({
-                message: "Operation failed",
-                description: "There was an error processing your request. Please try again."
+                message: "Form validation failed",
+                description: "Please check the form fields and try again",
             });
-            console.error("Error in form submission:", error);
+        }
+    };
+
+    // Load price history for a product
+    const loadPriceHistory = async (productId: string) => {
+        setPriceHistoryLoading(true);
+        try {
+            const history = await ProductService.getPriceHistory(accessToken, productId);
+            setPriceHistory(history || []);
+        } catch (error) {
+            console.error("Error loading price history:", error);
+            setPriceHistory([]);
+        } finally {
+            setPriceHistoryLoading(false);
+        }
+    };
+
+    // Load quantity history for a product
+    const loadQuantityHistory = async (productId: string) => {
+        setQuantityHistoryLoading(true);
+        try {
+            const history = await ProductService.getQuantityHistory(accessToken, productId);
+            setQuantityHistory(history || []);
+        } catch (error) {
+            console.error("Error loading quantity history:", error);
+            setQuantityHistory([]);
+        } finally {
+            setQuantityHistoryLoading(false);
         }
     };
 
@@ -259,27 +295,107 @@ const ProductManagementComponent: React.FC = () => {
     const showPriceHistoryModal = (product: ProductType) => {
         setSelectedProduct(product);
         setPriceHistoryModalVisible(true);
+        loadPriceHistory(product.productId);
     };
 
     // Show quantity history modal
     const showQuantityHistoryModal = (product: ProductType) => {
         setSelectedProduct(product);
         setQuantityHistoryModalVisible(true);
+        loadQuantityHistory(product.productId);
+    };
+
+    // Update product price
+    const updateProductPrice = async (productId: string, newPrice: number, reason: string) => {
+        try {
+            const result = await ProductService.updateProductPrice(accessToken, productId, {
+                newPrice,
+                reason,
+                changedBy: "Admin", // This could be dynamic based on the logged-in user
+            });
+
+            if (result) {
+                notification.success({message: "Price updated successfully"});
+                fetchProducts();
+                if (selectedProduct && selectedProduct.productId === productId) {
+                    loadPriceHistory(productId);
+                }
+                return true;
+            } else {
+                notification.error({message: "Failed to update price"});
+                return false;
+            }
+        } catch (error) {
+            console.error("Error updating price:", error);
+            notification.error({message: "An error occurred while updating the price"});
+            return false;
+        }
+    };
+
+    // Update product quantity
+    const updateProductQuantity = async (productId: string, newQuantity: number, reason: string) => {
+        try {
+            const result = await ProductService.updateProductInventory(accessToken, productId, {
+                newQuantity,
+                reason,
+                changedBy: "Admin", // This could be dynamic based on the logged-in user
+            });
+
+            if (result) {
+                notification.success({message: "Inventory updated successfully"});
+                fetchProducts();
+                if (selectedProduct && selectedProduct.productId === productId) {
+                    loadQuantityHistory(productId);
+                }
+                return true;
+            } else {
+                notification.error({message: "Failed to update inventory"});
+                return false;
+            }
+        } catch (error) {
+            console.error("Error updating inventory:", error);
+            notification.error({message: "An error occurred while updating the inventory"});
+            return false;
+        }
     };
 
     // Handle product deletion
     const handleDeleteProduct = async (id: string) => {
         try {
-            // TODO: Implement delete product API call
-            // await ProductService.deleteProduct(accessToken, id);
-            notification.success({message: "Product deleted successfully"});
-            fetchProducts();
+            const result = await ProductService.deleteProduct(accessToken, id);
+
+            if (result) {
+                notification.success({message: "Product deleted successfully"});
+                fetchProducts();
+            } else {
+                notification.error({message: "Failed to delete product"});
+            }
         } catch (error) {
+            console.error("Error deleting product:", error);
             notification.error({
                 message: "Delete failed",
-                description: "There was an error deleting the product. Please try again."
+                description: "There was an error deleting the product. Please try again.",
             });
-            console.error("Error deleting product:", error);
+        }
+    };
+
+    // Change product status
+    const updateProductStatus = async (productId: string, status: string) => {
+        try {
+            const result = await ProductService.updateProductStatus(accessToken, productId, status);
+
+            if (result) {
+                notification.success({message: `Product status changed to ${status}`});
+                fetchProducts();
+                return true;
+            } else {
+                notification.error({message: "Failed to update product status"});
+                return false;
+            }
+        } catch (error) {
+            console.error("Error updating product status:", error);
+            notification.error({message: "An error occurred while updating the status"});
+            return false;
         }
     };
 
@@ -287,8 +403,8 @@ const ProductManagementComponent: React.FC = () => {
     const getCategoryOptions = () => {
         if (!categories || !Array.isArray(categories)) return [];
 
-        const flattenCategories = (cats: any[], result: any[] = []) => {
-            cats.forEach(cat => {
+        const flattenCategories = (cats: CategoryType[], result: CategoryType[] = []) => {
+            cats.forEach((cat) => {
                 result.push({id: cat.id, name: cat.name});
                 if (cat.children && Array.isArray(cat.children) && cat.children.length > 0) {
                     flattenCategories(cat.children, result);
@@ -299,27 +415,43 @@ const ProductManagementComponent: React.FC = () => {
 
         const allCategories = flattenCategories(categories);
 
-        return allCategories.map(cat => (
-            <Option key={cat.id} value={cat.id}>{cat.name}</Option>
+        return allCategories.map((cat) => (
+            <Option key={cat.id} value={cat.id}>
+                {cat.name}
+            </Option>
         ));
     };
 
     // Define table columns
     const columns = [
         {
-            title: 'Image',
-            key: 'image',
+            title: "Ảnh",
+            key: "image",
             width: 80,
-            render: (_: any, record: ProductType) => (
-                <div style={{width: 60, height: 60, display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+            render: (_: never, record: ProductType) => (
+                <div
+                    style={{
+                        width: 60,
+                        height: 60,
+                        display: "flex",
+                        justifyContent: "center",
+                        alignItems: "center",
+                    }}
+                >
                     {record.imageUrls && record.imageUrls.length > 0 ? (
                         <img
                             src={record.imageUrls[0]}
                             alt={record.name}
-                            style={{maxWidth: '100%', maxHeight: '100%', objectFit: 'contain'}}
+                            style={{maxWidth: "100%", maxHeight: "100%", objectFit: "contain"}}
+                        />
+                    ) : record.thumbnailUrl ? (
+                        <img
+                            src={record.thumbnailUrl}
+                            alt={record.name}
+                            style={{maxWidth: "100%", maxHeight: "100%", objectFit: "contain"}}
                         />
                     ) : (
-                        <div style={{color: '#ccc', fontSize: 24}}>
+                        <div style={{color: "#ccc", fontSize: 24}}>
                             <InboxOutlined/>
                         </div>
                     )}
@@ -327,101 +459,110 @@ const ProductManagementComponent: React.FC = () => {
             ),
         },
         {
-            title: 'Name',
-            dataIndex: 'name',
-            key: 'name',
+            title: "Tên",
+            dataIndex: "name",
+            key: "name",
             render: (text: string, record: ProductType) => (
                 <div>
-                    <div style={{fontWeight: 'bold'}}>{text}</div>
-                    <div style={{fontSize: 12, color: '#999'}}>SKU: {record.sku}</div>
+                    <div style={{fontWeight: "bold"}}>{text}</div>
+                    <div style={{fontSize: 12, color: "#999"}}>SKU: {record.sku}</div>
                 </div>
             ),
         },
         {
-            title: 'Brand',
-            dataIndex: 'brand',
-            key: 'brand',
+            title: "Hãng",
+            dataIndex: "brand",
+            key: "brand",
         },
         {
-            title: 'Price',
-            key: 'price',
-            render: (_: any, record: ProductType) => (
+            title: "Giá",
+            key: "price",
+            render: (_: never, record: ProductType) => (
                 <div>
-                    <div style={{fontWeight: 'bold'}}>${record.currentPrice}</div>
-                    {record.originalPrice > record.currentPrice && (
-                        <div style={{textDecoration: 'line-through', color: '#999', fontSize: 12}}>
-                            ${record.originalPrice}
+                    <div style={{fontWeight: "bold"}}>{formatPrice(record.basePrice)}</div>
+                    {record.basePrice > record.currentPrice && (
+                        <div style={{textDecoration: "line-through", color: "#999", fontSize: 12}}>
+                            {formatPrice(record.basePrice)}
                         </div>
                     )}
                 </div>
             ),
         },
         {
-            title: 'Quantity',
-            dataIndex: 'currentQuantity',
-            key: 'currentQuantity',
-            render: (quantity: number) => (
-                <Badge
-                    count={quantity}
-                    showZero
-                    style={{
-                        backgroundColor: quantity > 10 ? '#52c41a' : quantity > 0 ? '#faad14' : '#f5222d',
-                    }}
-                />
+            title: "Số Lượng",
+            key: "quantity",
+            render: (_: never, record: ProductType) => (
+                <div>
+                    <Badge
+                        count={record.availableQuantity}
+                        showZero
+                        style={{
+                            backgroundColor:
+                                record.availableQuantity > 10
+                                    ? "#52c41a"
+                                    : record.availableQuantity > 0
+                                        ? "#faad14"
+                                        : "#f5222d",
+                        }}
+                    />
+                    {record.reservedQuantity > 0 && (
+                        <div style={{fontSize: 12, color: "#999", marginTop: 4}}>
+                            Reserved: {record.reservedQuantity}
+                        </div>
+                    )}
+                </div>
             ),
         },
         {
-            title: 'Status',
-            dataIndex: 'status',
-            key: 'status',
+            title: "Trạng Thái",
+            dataIndex: "status",
+            key: "status",
             render: (status: string) => {
-                let color = 'default';
+                let color = "default";
                 switch (status) {
-                    case 'ACTIVE':
-                        color = 'green';
+                    case "ACTIVE":
+                        color = "green";
                         break;
-                    case 'INACTIVE':
-                        color = 'gray';
+                    case "INACTIVE":
+                        color = "gray";
                         break;
-                    case 'OUT_OF_STOCK':
-                        color = 'red';
+                    case "OUT_OF_STOCK":
+                        color = "red";
                         break;
-                    case 'DISCONTINUED':
-                        color = 'purple';
+                    case "DISCONTINUED":
+                        color = "purple";
                         break;
                 }
                 return <Tag color={color}>{status}</Tag>;
             },
         },
         {
-            title: 'Actions',
-            key: 'actions',
-            width: 320,
-            render: (_: any, record: ProductType) => (
+            title: "Hành Động",
+            key: "actions",
+            width: 330,
+            render: (_: never, record: ProductType) => (
                 <Space>
-                    <Button
-                        icon={<EditOutlined/>}
-                        onClick={() => showProductModal(record)}
-                    >
-                        Edit
+                    <Button icon={<EditOutlined/>} onClick={() => showProductModal(record)}>
+                        Sửa
                     </Button>
                     <Button
                         icon={<DollarOutlined/>}
                         onClick={() => showPriceHistoryModal(record)}
                     >
-                        Price
+                        Giá
                     </Button>
                     <Button
                         icon={<InboxOutlined/>}
                         onClick={() => showQuantityHistoryModal(record)}
                     >
-                        Inventory
+                        Tồn Kho
                     </Button>
                     <Popconfirm
-                        title="Are you sure you want to delete this product?"
-                        onConfirm={() => handleDeleteProduct(record.id)}
-                        okText="Yes"
-                        cancelText="No"
+                        title="Bạn có muốn xóa sản phẩm này?"
+                        onConfirm={() => handleDeleteProduct(record.productId)}
+                        okText="Xóa"
+                        cancelText="Không"
+                        placement={"topLeft"}
                     >
                         <Button danger icon={<DeleteOutlined/>}/>
                     </Popconfirm>
@@ -431,63 +572,74 @@ const ProductManagementComponent: React.FC = () => {
     ];
 
     return (
-        <Content style={{margin: '24px 16px', padding: 24, background: '#f5f7fa', overflow: 'auto'}}>
+        <Content style={{margin: "24px 16px", padding: 24, background: "#f5f7fa", overflow: "auto"}}>
             {/* Search and Action Bar */}
             <Card style={{marginBottom: 24}}>
-                <div style={{display: 'flex', justifyContent: 'space-between', marginBottom: 16}}>
-                    <Title level={4}>Product Management</Title>
-                    <Button
-                        type="primary"
-                        size="large"
-                        icon={<PlusOutlined/>}
-                        onClick={() => showProductModal()}
-                    >
-                        Add Product
-                    </Button>
+                <div style={{display: "flex", justifyContent: "space-between", marginBottom: 16}}>
+                    <Title level={4}>Quản Lý Sản Phẩm</Title>
+                    <Space>
+                        <Button
+                            icon={<ReloadOutlined/>}
+                            onClick={fetchProducts}
+                            loading={loading}
+                            size="large"
+                        >
+                            Làm Mới
+                        </Button>
+                        <Button
+                            type="primary"
+                            size="large"
+                            icon={<PlusOutlined/>}
+                            onClick={() => showProductModal()}
+                        >
+                            Thêm Sản Phẩm
+                        </Button>
+                    </Space>
                 </div>
 
                 <Form layout="vertical">
-                    <div style={{display: 'flex', gap: 16, flexWrap: 'wrap'}}>
-                        <Form.Item label="Product Name" style={{flex: 1, minWidth: '200px'}}>
+                    <div style={{display: "flex", gap: 16, flexWrap: "wrap"}}>
+                        <Form.Item label="Tên Sản Phẩm" style={{flex: 1, minWidth: "200px"}}>
                             <Input
-                                placeholder="Search by name"
+                                placeholder="Nhập tên sản phẩm"
                                 value={searchName}
                                 onChange={(e) => setSearchName(e.target.value)}
                                 prefix={<SearchOutlined/>}
                             />
                         </Form.Item>
-                        <Form.Item label="SKU" style={{flex: 1, minWidth: '200px'}}>
+                        <Form.Item label="SKU" style={{flex: 1, minWidth: "200px"}}>
                             <Input
-                                placeholder="Search by SKU"
+                                placeholder="Nhập mã SKU"
                                 value={searchSku}
                                 onChange={(e) => setSearchSku(e.target.value)}
                                 prefix={<SearchOutlined/>}
                             />
                         </Form.Item>
-                        <Form.Item label="Category" style={{flex: 1, minWidth: '200px'}}>
+                        <Form.Item label="Danh Mục" style={{flex: 1, minWidth: "200px"}}>
                             <Select
-                                placeholder="Filter by category"
+                                placeholder="Lọc Theo Danh Mục"
                                 value={searchCategory}
                                 onChange={setSearchCategory}
                                 allowClear
-                                style={{width: '100%'}}
+                                style={{width: "100%"}}
+                                loading={categoriesLoading}
                             >
                                 {getCategoryOptions()}
                             </Select>
                         </Form.Item>
-                        <Form.Item label="Brand" style={{flex: 1, minWidth: '200px'}}>
+                        <Form.Item label="Hãng Sản Xuất" style={{flex: 1, minWidth: "200px"}}>
                             <Input
-                                placeholder="Search by brand"
+                                placeholder="Nhập tên hãng"
                                 value={searchBrand}
                                 onChange={(e) => setSearchBrand(e.target.value)}
                                 prefix={<SearchOutlined/>}
                             />
                         </Form.Item>
                     </div>
-                    <div style={{display: 'flex', justifyContent: 'flex-end', gap: 16}}>
-                        <Button onClick={resetSearch}>Reset</Button>
-                        <Button type="primary" onClick={handleSearch} icon={<SearchOutlined/>}>
-                            Search
+                    <div style={{display: "flex", justifyContent: "flex-end", gap: 16}}>
+                        <Button onClick={resetSearch}>Đặt Lại</Button>
+                        <Button type="primary" onClick={handleSearch} icon={<SearchOutlined/>} loading={loading}>
+                            Tìm Kiếm
                         </Button>
                     </div>
                 </Form>
@@ -495,16 +647,11 @@ const ProductManagementComponent: React.FC = () => {
 
             {/* Products Table */}
             {loading ? (
-                <div style={{textAlign: 'center', padding: '50px 0'}}>
+                <div style={{textAlign: "center", padding: "50px 0"}}>
                     <Spin size="large"/>
                 </div>
             ) : error ? (
-                <Alert
-                    message="Error"
-                    description={`Failed to load products: ${error}`}
-                    type="error"
-                    showIcon
-                />
+                <Alert message="Lỗi" description={error} type="error" showIcon/>
             ) : (
                 <Card>
                     <Table
@@ -516,17 +663,12 @@ const ProductManagementComponent: React.FC = () => {
                             pageSize: pagination.pageSize,
                             total: pagination.total,
                             showSizeChanger: true,
-                            pageSizeOptions: ['10', '20', '50', '100'],
-                            showTotal: (total) => `Total ${total} items`
+                            pageSizeOptions: ["10", "20", "50", "100"],
+                            showTotal: (total) => `Tổng ${total} sản phẩm`,
                         }}
                         onChange={handleTableChange}
                         locale={{
-                            emptyText: (
-                                <Empty
-                                    description="No products found"
-                                    image={Empty.PRESENTED_IMAGE_SIMPLE}
-                                />
-                            )
+                            emptyText: <Empty description="Không tìm thấy sản phẩm" image={Empty.PRESENTED_IMAGE_SIMPLE}/>,
                         }}
                     />
                 </Card>
@@ -534,10 +676,9 @@ const ProductManagementComponent: React.FC = () => {
 
             {/* Add/Edit Product Modal */}
             <Modal
-                title={editingProduct ? "Edit Product" : "Add Product"}
+                title={editingProduct ? "Chỉnh sửa sản phẩm" : "Thêm sản phẩm"}
                 open={productModalVisible}
                 onCancel={() => setProductModalVisible(false)}
-                onOk={handleProductSubmit}
                 width={800}
                 maskClosable={false}
                 footer={[
@@ -545,112 +686,144 @@ const ProductManagementComponent: React.FC = () => {
                         Cancel
                     </Button>,
                     <Button key="submit" type="primary" onClick={handleProductSubmit}>
-                        {editingProduct ? "Update Product" : "Create Product"}
-                    </Button>
+                        {editingProduct ? "Cập nhật" : "Thêm mới"}
+                    </Button>,
                 ]}
             >
-                <Form
-                    form={form}
-                    layout="vertical"
-                >
+                <Form form={form} layout="vertical">
                     <Tabs defaultActiveKey="1">
-                        <TabPane tab="Basic Information" key="1">
-                            <div style={{display: 'flex', gap: 16}}>
+                        <TabPane tab="Thông Tin Chung" key="1">
+                            <div style={{display: "flex", gap: 16}}>
                                 <Form.Item
                                     name="name"
-                                    label="Product Name"
-                                    rules={[{required: true, message: 'Please enter product name'}]}
+                                    label="Tên Sản Phẩm"
+                                    rules={[{required: true, message: "Vui lòng nhập tên sản phẩm"}]}
                                     style={{flex: 2}}
                                 >
-                                    <Input placeholder="Enter product name"/>
+                                    <Input placeholder="Nhập tên sản phẩm"/>
                                 </Form.Item>
 
                                 <Form.Item
                                     name="sku"
                                     label="SKU"
-                                    rules={[{required: true, message: 'Please enter SKU'}]}
+                                    rules={[{required: true, message: "Vui lòng nhập mã SKU"}]}
                                     style={{flex: 1}}
+                                    required={!!editingProduct}
                                 >
-                                    <Input placeholder="Enter SKU"/>
+                                    <Input
+                                        disabled={!!editingProduct}
+                                        placeholder="Nhập mã SKU"/>
                                 </Form.Item>
                             </div>
 
-                            <Form.Item
-                                name="description"
-                                label="Description"
-                            >
-                                <TextArea rows={4} placeholder="Enter product description"/>
+                            <Form.Item name="description" label="Mô Tả">
+                                <TextArea
+                                    count={{max: 1024, show: true}}
+                                    maxLength={1024}
+                                    rows={4}
+                                    placeholder="Nhập mô tả sản phẩm"/>
                             </Form.Item>
 
-                            <div style={{display: 'flex', gap: 16}}>
-                                <Form.Item
-                                    name="brand"
-                                    label="Brand"
-                                    style={{flex: 1}}
-                                >
-                                    <Input placeholder="Enter brand name"/>
+                            <div style={{display: "flex", gap: 16}}>
+                                <Form.Item name="brand" label="Hãng Sản Xuất" style={{flex: 1}}>
+                                    <Input placeholder="Nhập tên hãng sản xuất"/>
                                 </Form.Item>
 
                                 <Form.Item
                                     name="status"
-                                    label="Status"
-                                    rules={[{required: true, message: 'Please select status'}]}
+                                    label="Trạng Thái Sản Phẩm"
+                                    rules={[{required: true, message: "Chọn trạng thái sản phẩm"}]}
                                     style={{flex: 1}}
                                 >
                                     <Select placeholder="Select status">
-                                        <Option value="ACTIVE">Active</Option>
-                                        <Option value="INACTIVE">Inactive</Option>
-                                        <Option value="OUT_OF_STOCK">Out of Stock</Option>
-                                        <Option value="DISCONTINUED">Discontinued</Option>
+                                        <Option value="ACTIVE">Đang bán (ACTIVE)</Option>
+                                        <Option value="INACTIVE">Tạm dừng bán (INACTIVE)</Option>
+                                        <Option value="OUT_OF_STOCK">Đang hết hàng (OUT OF STOCK)</Option>
+                                        <Option value="DISCONTINUED">Ngừng kinh doanh (DISCONTINUED)</Option>
                                     </Select>
                                 </Form.Item>
                             </div>
                         </TabPane>
 
-                        <TabPane tab="Price & Inventory" key="2">
-                            <div style={{display: 'flex', gap: 16}}>
+                        <TabPane tab="Giá Cả & Tồn Kho" key="2">
+                            <div style={{display: "flex", gap: 16}}>
                                 <Form.Item
-                                    name="currentPrice"
-                                    label="Current Price"
-                                    rules={[{required: true, message: 'Please enter current price'}]}
+                                    name="basePrice"
+                                    label="Giá Gốc"
+                                    rules={[{required: true, message: "Vui lòng nhập giá gốc"}]}
                                     style={{flex: 1}}
                                 >
                                     <InputNumber
                                         min={0}
-                                        style={{width: '100%'}}
-                                        formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                        parser={value => value!.replace(/\$\s?|(,*)/g, '')}
+                                        style={{width: "100%"}}
+                                        formatter={(value) => `đ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                        parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
                                     />
                                 </Form.Item>
 
                                 <Form.Item
-                                    name="originalPrice"
-                                    label="Original Price"
+                                    name="currentPrice"
+                                    label="Giá Hiện Bán"
+                                    rules={[{required: true, message: "Vui lòng nhập giá hiện bán"}]}
                                     style={{flex: 1}}
                                 >
                                     <InputNumber
                                         min={0}
-                                        style={{width: '100%'}}
-                                        formatter={value => `$ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')}
-                                        parser={value => value!.replace(/\$\s?|(,*)/g, '')}
+                                        style={{width: "100%"}}
+                                        formatter={(value) => `đ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                        parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
                                     />
                                 </Form.Item>
                             </div>
 
                             <Form.Item
-                                name="currentQuantity"
-                                label="Current Quantity"
-                                rules={[{required: true, message: 'Please enter current quantity'}]}
+                                name="costPrice"
+                                label="Giá Nhập Hàng"
+                                rules={[{required: true, message: "Vui lòng nhập giá nhập hàng"}]}
                             >
-                                <InputNumber min={0} style={{width: '100%'}}/>
+                                <InputNumber
+                                    min={0}
+                                    style={{width: "100%"}}
+                                    formatter={(value) => `đ ${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ",")}
+                                    parser={(value) => value!.replace(/\$\s?|(,*)/g, "")}
+                                />
                             </Form.Item>
+
+                            <div style={{display: "flex", gap: 16}}>
+                                <Form.Item
+                                    name="totalQuantity"
+                                    label="Tổng Tồn Kho"
+                                    rules={[{required: false, message: "Please enter total quantity"}]}
+                                    style={{flex: 1}}
+                                >
+                                    <InputNumber
+                                        disabled
+                                        min={0}
+                                        style={{width: "100%"}}
+                                        value={form?.getFieldsValue()?.availableQuantity + form?.getFieldsValue()?.reservedQuantity}
+                                    />
+                                </Form.Item>
+
+                                <Form.Item
+                                    name="availableQuantity"
+                                    label="Hàng sẵn bán"
+                                    rules={[{required: true, message: "Nhập số hàng sẵn bán"}]}
+                                    style={{flex: 1}}
+                                >
+                                    <InputNumber min={0} style={{width: "100%"}}/>
+                                </Form.Item>
+
+                                <Form.Item name="reservedQuantity" label="Hàng đặt trước" style={{flex: 1}}>
+                                    <InputNumber disabled min={0} style={{width: "100%"}}/>
+                                </Form.Item>
+                            </div>
                         </TabPane>
 
                         <TabPane tab="Categories" key="3">
                             <Form.Item
-                                name="mainCategory"
+                                name="mainCategoryId"
                                 label="Main Category"
-                                rules={[{required: true, message: 'Please select main category'}]}
+                                rules={[{required: true, message: "Please select main category"}]}
                             >
                                 <Select
                                     showSearch
@@ -662,10 +835,7 @@ const ProductManagementComponent: React.FC = () => {
                                 </Select>
                             </Form.Item>
 
-                            <Form.Item
-                                name="categories"
-                                label="Additional Categories"
-                            >
+                            <Form.Item name="additionalCategories" label="Additional Categories">
                                 <Select
                                     mode="multiple"
                                     showSearch
@@ -680,7 +850,7 @@ const ProductManagementComponent: React.FC = () => {
 
                         <TabPane tab="Attributes" key="4">
                             <Form.Item
-                                name="attributes"
+                                name="additionalAttributes"
                                 label="Additional Attributes (JSON Format)"
                             >
                                 <TextArea
@@ -698,6 +868,9 @@ const ProductManagementComponent: React.FC = () => {
                                 showIcon
                                 style={{marginBottom: 16}}
                             />
+                            <Form.Item name="thumbnailUrl" label="Thumbnail URL">
+                                <Input placeholder="Enter thumbnail URL"/>
+                            </Form.Item>
                             <Upload
                                 listType="picture-card"
                                 fileList={[]}
@@ -721,7 +894,7 @@ const ProductManagementComponent: React.FC = () => {
                 footer={[
                     <Button key="close" onClick={() => setPriceHistoryModalVisible(false)}>
                         Close
-                    </Button>
+                    </Button>,
                 ]}
                 width={700}
             >
@@ -729,43 +902,47 @@ const ProductManagementComponent: React.FC = () => {
                     <div>
                         <div style={{marginBottom: 16}}>
                             <Text strong>Current Price: </Text>
-                            <Text>${selectedProduct.currentPrice}</Text>
+                            <Text>${selectedProduct.currentPrice.toFixed(2)}</Text>
                         </div>
 
-                        {selectedProduct.priceHistory && selectedProduct.priceHistory.length > 0 ? (
+                        {priceHistoryLoading ? (
+                            <div style={{textAlign: "center", padding: "20px 0"}}>
+                                <Spin/>
+                            </div>
+                        ) : priceHistory && priceHistory.length > 0 ? (
                             <Table
-                                dataSource={selectedProduct.priceHistory}
+                                dataSource={priceHistory}
                                 rowKey={(record) => `${record.timestamp}`}
                                 pagination={false}
                                 columns={[
                                     {
-                                        title: 'Date',
-                                        dataIndex: 'timestamp',
-                                        key: 'timestamp',
-                                        render: (timestamp: string) => new Date(timestamp).toLocaleString()
+                                        title: "Date",
+                                        dataIndex: "timestamp",
+                                        key: "timestamp",
+                                        render: (timestamp: string) => new Date(timestamp).toLocaleString(),
                                     },
                                     {
-                                        title: 'Old Price',
-                                        dataIndex: 'oldPrice',
-                                        key: 'oldPrice',
-                                        render: (price: number) => `$${price}`
+                                        title: "Old Price",
+                                        dataIndex: "oldPrice",
+                                        key: "oldPrice",
+                                        render: (price: number) => `$${price.toFixed(2)}`,
                                     },
                                     {
-                                        title: 'New Price',
-                                        dataIndex: 'newPrice',
-                                        key: 'newPrice',
-                                        render: (price: number) => `$${price}`
+                                        title: "New Price",
+                                        dataIndex: "newPrice",
+                                        key: "newPrice",
+                                        render: (price: number) => `$${price.toFixed(2)}`,
                                     },
                                     {
-                                        title: 'Reason',
-                                        dataIndex: 'changeReason',
-                                        key: 'changeReason'
+                                        title: "Reason",
+                                        dataIndex: "changeReason",
+                                        key: "changeReason",
                                     },
                                     {
-                                        title: 'Changed By',
-                                        dataIndex: 'changedBy',
-                                        key: 'changedBy'
-                                    }
+                                        title: "Changed By",
+                                        dataIndex: "changedBy",
+                                        key: "changedBy",
+                                    },
                                 ]}
                             />
                         ) : (
@@ -791,7 +968,7 @@ const ProductManagementComponent: React.FC = () => {
                     <div>
                         <div style={{marginBottom: 16}}>
                             <Text strong>Current Quantity: </Text>
-                            <Text>{selectedProduct.currentQuantity}</Text>
+                            <Text>{selectedProduct.totalQuantity}</Text>
                         </div>
 
                         {selectedProduct.quantityHistory && selectedProduct.quantityHistory.length > 0 ? (

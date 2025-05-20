@@ -54,7 +54,7 @@ const ProductService = {
 
       // Kiểm tra nếu response có data hợp lệ
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log("Lấy sản phẩm thất bại");
         return [];
@@ -78,7 +78,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Lấy sản phẩm với ID ${productId} thất bại`);
         return null;
@@ -115,7 +115,7 @@ const ProductService = {
       });
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log("Tìm kiếm sản phẩm thất bại");
         return { data: { content: [] } };
@@ -141,7 +141,7 @@ const ProductService = {
       );
 
       if (response.status === 201) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log("Tạo sản phẩm thất bại");
         return null;
@@ -167,7 +167,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Cập nhật sản phẩm với ID ${productId} thất bại`);
         return null;
@@ -223,7 +223,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Cập nhật giá sản phẩm với ID ${productId} thất bại`);
         return null;
@@ -248,7 +248,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Lấy lịch sử giá sản phẩm với ID ${productId} thất bại`);
         return [];
@@ -279,7 +279,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Cập nhật số lượng sản phẩm với ID ${productId} thất bại`);
         return null;
@@ -304,7 +304,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Lấy lịch sử số lượng sản phẩm với ID ${productId} thất bại`);
         return [];
@@ -330,7 +330,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Thiết lập danh mục chính cho sản phẩm với ID ${productId} thất bại`);
         return null;
@@ -355,7 +355,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Thêm danh mục cho sản phẩm với ID ${productId} thất bại`);
         return null;
@@ -379,7 +379,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Xóa danh mục cho sản phẩm với ID ${productId} thất bại`);
         return null;
@@ -403,7 +403,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Lấy danh mục cho sản phẩm với ID ${productId} thất bại`);
         return [];
@@ -429,7 +429,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Cập nhật trạng thái sản phẩm với ID ${productId} thất bại`);
         return null;
@@ -455,7 +455,7 @@ const ProductService = {
       );
 
       if (response.status === 201) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log("Tạo hàng loạt sản phẩm thất bại");
         return [];
@@ -485,7 +485,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Lấy sản phẩm theo danh mục ${categoryId} thất bại`);
         return {content: [], totalElements: 0, totalPages: 0};
@@ -515,7 +515,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Lấy sản phẩm theo thương hiệu ${brand} thất bại`);
         return {content: [], totalElements: 0, totalPages: 0};
@@ -541,7 +541,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Cập nhật thuộc tính sản phẩm với ID ${productId} thất bại`);
         return null;
@@ -565,7 +565,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Xóa thuộc tính "${key}" cho sản phẩm với ID ${productId} thất bại`);
         return null;
@@ -595,7 +595,7 @@ const ProductService = {
       );
 
       if (response.status === 201) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Tải lên tệp cho sản phẩm với ID ${params.productId} thất bại`);
         return null;
@@ -619,7 +619,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log("Lấy danh sách tệp thất bại");
         return [];
@@ -643,7 +643,7 @@ const ProductService = {
       );
 
       if (response.status === 200) {
-        return response.data;
+        return response.data.data;
       } else {
         console.log(`Lấy URL tệp ${fileName} thất bại`);
         return null;

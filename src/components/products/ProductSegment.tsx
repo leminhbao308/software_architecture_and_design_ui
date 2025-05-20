@@ -108,16 +108,16 @@ const ProductSegment: React.FC<ProductSegmentProps> = (
                     data = await ProductService.getAllProduct(accessToken, categoryId, currentPage, size);
                 }
 
-                const listProducts = data.data.content;
+                const listProducts = data.content;
 
                 // Extract pagination info from response
                 const paginationInfo = {
-                    page: data.data.page,
-                    size: data.data.size,
-                    total_elements: data.data.total_elements,
-                    total_pages: data.data.total_pages,
-                    first: data.data.first,
-                    last: data.data.last
+                    page: data.page,
+                    size: data.size,
+                    total_elements: data.total_elements,
+                    total_pages: data.total_pages,
+                    first: data.first,
+                    last: data.last
                 };
 
                 setPagination(paginationInfo);
