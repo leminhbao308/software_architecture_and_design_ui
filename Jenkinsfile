@@ -4,9 +4,6 @@ pipeline {
     environment {
         // Define service name
         SERVICE_NAME = "devicer-frontend"
-        // Change path to a directory with write permissions
-        ENV_BACKUP_DIR = "/tmp/env-backup"
-        ENV_CONFIG_DIR = "/tmp/env-backup/config"
         // Flag to track first build
         IS_FIRST_BUILD = "false"
     }
@@ -21,40 +18,12 @@ pipeline {
         stage('Environment Setup') {
             steps {
                 script {
-                    // Ensure backup and config directories exist
-                    sh "mkdir -p ${ENV_BACKUP_DIR}"
-                    sh "mkdir -p ${ENV_CONFIG_DIR}"
-
-                    // Check if env-config volume exists
-                    def volumeExists = sh(script: "docker volume ls | grep env-config || echo 'NOT_FOUND'", returnStdout: true).trim()
-                    if (volumeExists == 'NOT_FOUND' || !volumeExists.contains("env-config")) {
-                        echo "Creating env-config volume..."
-                        sh "docker volume create env-config"
-                    }
-
                     // Check if microservices-network exists
                     def networkExists = sh(script: "docker network ls | grep microservices-network || echo 'NOT_FOUND'", returnStdout: true).trim()
                     if (networkExists == 'NOT_FOUND' || !networkExists.contains("microservices-network")) {
                         echo "Creating microservices-network..."
                         sh "docker network create microservices-network"
                     }
-
-                    // Ensure env file for service exists
-                    sh """
-                    if [ ! -f "${ENV_CONFIG_DIR}/${SERVICE_NAME}.env" ]; then
-                        echo "Creating empty env file for ${SERVICE_NAME}..."
-                        touch "${ENV_CONFIG_DIR}/${SERVICE_NAME}.env"
-                    fi
-                    """
-
-                    // Copy env file from config dir to Docker volume
-                    sh """
-                    docker run --rm -v env-config:/data -v ${ENV_CONFIG_DIR}:/source alpine sh -c '
-                        mkdir -p /data
-                        cp -f /source/${SERVICE_NAME}.env /data/ || true
-                        chmod 666 /data/${SERVICE_NAME}.env || true
-                    '
-                    """
                 }
             }
         }
@@ -76,31 +45,6 @@ pipeline {
                             env.IS_FIRST_BUILD = "true"
                         }
                     }
-                }
-            }
-        }
-
-        stage('Backup Environment Variables') {
-            when {
-                expression { env.IS_FIRST_BUILD != "true" }
-            }
-            steps {
-                script {
-                    echo "Backing up environment variables for service: ${SERVICE_NAME}"
-                    sh """
-                    # Check if container exists and is running
-                    CONTAINER_STATUS=\$(docker inspect --format='{{.State.Status}}' ${SERVICE_NAME} 2>/dev/null || echo "not_found")
-
-                    if [ "\$CONTAINER_STATUS" = "running" ]; then
-                        # Extract environment variables
-                        docker exec ${SERVICE_NAME} env | grep -v "PATH=" | grep -v "PWD=" | grep -v "HOME=" > ${ENV_BACKUP_DIR}/${SERVICE_NAME}.env || echo "Failed to extract environment variables"
-                        echo "Environment variables for ${SERVICE_NAME} backed up successfully"
-                    else
-                        echo "Container ${SERVICE_NAME} is not running (status: \$CONTAINER_STATUS), no environment to backup"
-                        # Create empty file to avoid issues in the restore stage
-                        touch ${ENV_BACKUP_DIR}/${SERVICE_NAME}.env
-                    fi
-                    """
                 }
             }
         }
@@ -164,51 +108,6 @@ pipeline {
                     } else {
                         echo "Service is running correctly."
                     }
-                }
-            }
-        }
-
-        stage('Restore Environment Variables') {
-            when {
-                expression { env.IS_FIRST_BUILD != "true" }
-            }
-            steps {
-                script {
-                    echo "Restoring environment variables for service: ${SERVICE_NAME}"
-                    sh """
-                    if [ -f "${ENV_BACKUP_DIR}/${SERVICE_NAME}.env" ] && [ -s "${ENV_BACKUP_DIR}/${SERVICE_NAME}.env" ]; then
-                        echo "Found environment backup for ${SERVICE_NAME}, restoring..."
-
-                        # Wait for container to be fully up
-                        sleep 20
-
-                        # Check if container is running before trying to restore environment
-                        CONTAINER_STATUS=\$(docker inspect --format='{{.State.Status}}' ${SERVICE_NAME} 2>/dev/null || echo "not_found")
-
-                        if [ "\$CONTAINER_STATUS" = "running" ]; then
-                            # Apply each environment variable to the container
-                            cat ${ENV_BACKUP_DIR}/${SERVICE_NAME}.env | while read -r line; do
-                                # Skip empty lines
-                                [ -z "\$line" ] && continue
-
-                                # Extract key and value
-                                key=\$(echo "\$line" | cut -d= -f1)
-                                value=\$(echo "\$line" | cut -d= -f2-)
-
-                                # Skip some variables we don't want to override
-                                if [[ "\$key" != "PATH" && "\$key" != "PWD" && "\$key" != "HOME" && "\$key" != "HOSTNAME" ]]; then
-                                    echo "Setting \$key for ${SERVICE_NAME}..."
-                                    docker exec ${SERVICE_NAME} /bin/sh -c "export \$key='\$value'" || echo "Failed to set \$key but continuing"
-                                fi
-                            done
-                            echo "Environment restored for ${SERVICE_NAME}"
-                        else
-                            echo "Container ${SERVICE_NAME} is not running (status: \$CONTAINER_STATUS), skipping environment restoration"
-                        fi
-                    else
-                        echo "No environment backup found for ${SERVICE_NAME} or backup file is empty, skipping restoration"
-                    fi
-                    """
                 }
             }
         }

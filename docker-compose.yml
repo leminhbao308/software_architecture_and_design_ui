@@ -11,8 +11,6 @@ services:
       - "5173:5173"
     volumes:
       - env-config:/var/env-config
-    env_file:
-      - /var/env-config/devicer-frontend.env
     restart: always
     networks:
       - microservices-network
