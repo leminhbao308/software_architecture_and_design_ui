@@ -144,14 +144,14 @@ const CartPage: React.FC<CartPageProps> = ({marginTop = true}) => {
                             )}
                         />
 
-                        <Divider/>
+                        {/*<Divider/>*/}
 
-                        <Title level={5} style={{marginBottom: "10px"}}>Mã giảm giá (nếu có)</Title>
-                        <Space.Compact style={{width: '50%', height: "max-content"}}>
-                            <Input placeholder="Nhập mã giảm giá của bạn"/>
-                            <Button type="primary" size={"large"}>Sử dụng</Button>
-                        </Space.Compact>
-                        <Text style={{marginLeft: "15px"}}>Bạn được giảm {<b>5%</b>} giá trị đơn hàng</Text>
+                        {/*<Title level={5} style={{marginBottom: "10px"}}>Mã giảm giá (nếu có)</Title>*/}
+                        {/*<Space.Compact style={{width: '50%', height: "max-content"}}>*/}
+                        {/*    <Input placeholder="Nhập mã giảm giá của bạn"/>*/}
+                        {/*    <Button type="primary" size={"large"}>Sử dụng</Button>*/}
+                        {/*</Space.Compact>*/}
+                        {/*<Text style={{marginLeft: "15px"}}>Bạn được giảm {<b>5%</b>} giá trị đơn hàng</Text>*/}
                     </Card>
                 </Col>
 

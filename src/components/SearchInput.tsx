@@ -68,7 +68,7 @@ const SearchInput = () => {
 
     return (
         <>
-            {showAlert && <CustomAlert message="Từ từ thôi bạn ơi" />}
+            {showAlert && <CustomAlert message="Bạn thao tác quá nhanh! Vui lòng chờ"/>}
             <Search
                 placeholder="Tìm kiếm sản phẩm"
                 value={searchQuery}

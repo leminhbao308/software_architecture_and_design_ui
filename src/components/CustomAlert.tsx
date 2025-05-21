@@ -1,4 +1,5 @@
 import React from 'react';
+import {WarningOutlined} from "@ant-design/icons"
 
 interface CustomAlertProps {
     message: string;
@@ -18,7 +19,7 @@ const CustomAlert: React.FC<CustomAlertProps> = ({ message }) => {
             boxShadow: '0 0 10px rgba(0,0,0,0.15)',
             zIndex: 1000
         }}>
-            ⚠️ {message}
+            <WarningOutlined/> {message}
         </div>
     );
 };

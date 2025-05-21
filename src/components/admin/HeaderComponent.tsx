@@ -1,5 +1,4 @@
-import {Badge, Button, Flex, Layout, Space} from "antd";
-import {BellOutlined} from "@ant-design/icons";
+import {Flex, Layout, Space} from "antd";
 import React from "react";
 import UserMenu from "../user/UserMenu.tsx";
 
@@ -38,11 +37,6 @@ const HeaderComponent: React.FC<HeaderComponentProps> = ({currentPage = 'Dashboa
                 </div>
 
                 <Space size="large">
-
-                    <Badge count={5}>
-                        <Button type="text" icon={<BellOutlined/>}/>
-                    </Badge>
-
                     <UserMenu/>
                 </Space>
             </Flex>
