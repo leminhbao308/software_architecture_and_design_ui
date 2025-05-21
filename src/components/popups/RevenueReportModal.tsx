@@ -17,6 +17,7 @@ import isBetween from "dayjs/plugin/isBetween";
 import locale from "antd/es/date-picker/locale/vi_VN";
 import RevenueReportService from "../../services/admin/report/RevenueReport.service";
 import { getAccessToken } from "../../utils/tokenUtils";
+import FormatCurrency from "../../utils/formatCurrency";
 
 // Đăng ký plugin cho dayjs
 dayjs.extend(isBetween);
@@ -27,13 +28,13 @@ export type ReportItem = {
   key: string;
   productName: string;
   quantity: number;
-  revenue: number;
+  revenue: number | string;
 };
 export interface ExportDataType {
   startDate: string;
   endDate: string;
   currentDate: string;
-  totalRevenue: number;
+  totalRevenue: number | string;
   reportItems: ReportItem[];
 }
 
@@ -108,7 +109,7 @@ const RevenueReportModal: React.FC<Props> = ({ visible, orders, onClose }) => {
       key,
       productName: v.productName,
       quantity: v.quantity,
-      revenue: v.revenue,
+      revenue: FormatCurrency(v.revenue),
     }));
     items.sort((a, b) => b.quantity - a.quantity);
     const top3 = items.slice(0, 3);
@@ -123,7 +124,7 @@ const RevenueReportModal: React.FC<Props> = ({ visible, orders, onClose }) => {
       startDate: startDate.format("YYYY-MM-DD"),
       endDate: endDate.format("YYYY-MM-DD"),
       currentDate: today.format("YYYY-MM-DD"),
-      totalRevenue: totalRevenue,
+      totalRevenue: FormatCurrency(totalRevenue),
       reportItems: reportData,
     };
 
@@ -175,7 +176,6 @@ const RevenueReportModal: React.FC<Props> = ({ visible, orders, onClose }) => {
       title: "Doanh thu",
       dataIndex: "revenue",
       key: "revenue",
-      render: (r: number) => formatPrice(r),
       align: "center" as const,
     },
   ];

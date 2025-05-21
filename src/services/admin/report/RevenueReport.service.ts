@@ -5,8 +5,7 @@ import { ExportDataType } from "../../../components/popups/RevenueReportModal";
 const RevenueReportService = {
   exportPDFReport: async (access_token: string, data: ExportDataType) => {
     try {
-      console.log("Sending report data to server");
-
+      console.log("Sending report data to server: ", data);
       const response = await axios.post(
         `${APIConst.API_CONTEXT}${APIConst.EXPORT_REVENUE_REPORT}`,
         data,
