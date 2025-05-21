@@ -1,31 +1,22 @@
-# Build stage
-FROM node:20-alpine as build-stage
+# Sử dụng một stage duy nhất cho cả build và production
+FROM node:20-alpine
 
-WORKDIR /src
+WORKDIR /app
 
-# Copy package.json and package-lock.json
+# Copy package.json và package-lock.json
 COPY package*.json ./
 
-# Install dependencies
+# Cài đặt dependencies
 RUN npm ci
 
-# Copy all files
+# Copy tất cả các file
 COPY . .
 
-# Build the app
+# Build ứng dụng
 RUN npm run build
 
-# Production stage
-FROM nginx:stable-alpine as production-stage
+# Expose port 5173 (đúng với cấu hình trong docker-compose)
+EXPOSE 5173
 
-# Copy built assets from build stage
-COPY --from=build-stage /app/dist /usr/share/nginx/html
-
-# Copy custom nginx config (will create below)
-COPY nginx.conf /etc/nginx/conf.d/default.conf
-
-# Expose port
-EXPOSE 80
-
-# Start nginx
-CMD ["nginx", "-g", "daemon off;"]
+# Chạy ứng dụng
+CMD ["npm", "run", "preview", "--", "--host", "0.0.0.0", "--port", "5173"]
