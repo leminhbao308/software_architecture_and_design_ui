@@ -1,5 +1,5 @@
 const APIConst = {
-  API_CONTEXT: "http://localhost:8080/api/v1",
+  API_CONTEXT: "https://kttk.punshub.top/api/v1",
   LOGIN: "/auth/login",
   SIGNUP: "/auth/register",
   REFRESH_TOKEN: "/auth/refresh-token",

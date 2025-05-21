@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+  # Frontend Service
+  devicer-frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: devicer-frontend
+    ports:
+      - "5173:80"
+    volumes:
+      - env-config:/var/env-config
+    env_file:
+      - /var/env-config/devicer-frontend.env
+    restart: always
+    networks:
+      - microservices-network
+
+volumes:
+  env-config:
+    external: true
+
+networks:
+  microservices-network:
+    external: true
