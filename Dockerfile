@@ -1,7 +1,7 @@
 # Build stage
 FROM node:20-alpine as build-stage
 
-WORKDIR /app
+WORKDIR /src
 
 # Copy package.json and package-lock.json
 COPY package*.json ./
