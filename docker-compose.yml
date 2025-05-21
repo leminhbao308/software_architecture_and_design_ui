@@ -8,7 +8,7 @@ services:
       dockerfile: Dockerfile
     container_name: devicer-frontend
     ports:
-      - "5173:80"
+      - "5173:5173"
     volumes:
       - env-config:/var/env-config
     env_file:

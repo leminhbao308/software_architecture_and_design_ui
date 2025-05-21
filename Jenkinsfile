@@ -168,62 +168,6 @@ pipeline {
             }
         }
 
-        stage('Configure Nginx Proxy') {
-            steps {
-                script {
-                    echo "Setting up Nginx configuration for devicer.punshub.top..."
-
-                    // Create Nginx config file for the domain
-                    sh """
-                    sudo mkdir -p /etc/nginx/sites-available
-                    sudo mkdir -p /etc/nginx/sites-enabled
-
-                    sudo tee /etc/nginx/sites-available/devicer.punshub.top << 'EOF'
-server {
-    listen 80;
-    server_name devicer.punshub.top;
-
-    location / {
-        proxy_pass http://localhost:5173;
-        proxy_set_header Host \\$host;
-        proxy_set_header X-Real-IP \\$remote_addr;
-        proxy_set_header X-Forwarded-For \\$proxy_add_x_forwarded_for;
-        proxy_set_header X-Forwarded-Proto \\$scheme;
-    }
-}
-EOF
-
-                    # Check if symlink exists
-                    if [ ! -f /etc/nginx/sites-enabled/devicer.punshub.top ]; then
-                        sudo ln -s /etc/nginx/sites-available/devicer.punshub.top /etc/nginx/sites-enabled/
-                    fi
-
-                    # Test Nginx configuration
-                    sudo nginx -t && sudo systemctl reload nginx
-                    """
-                }
-            }
-        }
-
-        stage('Configure SSL with Certbot') {
-            steps {
-                script {
-                    echo "Setting up SSL for devicer.punshub.top..."
-
-                    sh """
-                    # Ensure certbot is installed
-                    which certbot || sudo apt update && sudo apt install -y certbot python3-certbot-nginx
-
-                    # Obtain SSL certificate
-                    sudo certbot --nginx -d devicer.punshub.top --non-interactive --agree-tos -m admin@punshub.top || echo "SSL certificate could not be obtained, will continue without SSL"
-
-                    # Reload Nginx if successful
-                    sudo nginx -t && sudo systemctl reload nginx
-                    """
-                }
-            }
-        }
-
         stage('Restore Environment Variables') {
             when {
                 expression { env.IS_FIRST_BUILD != "true" }
