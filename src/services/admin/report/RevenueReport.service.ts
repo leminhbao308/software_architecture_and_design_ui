@@ -5,11 +5,13 @@ import { ExportDataType } from "../../../components/popups/RevenueReportModal";
 const RevenueReportService = {
   exportPDFReport: async (access_token: string, data: ExportDataType) => {
     try {
+      console.log("Sending report data to server");
+
       const response = await axios.post(
         `${APIConst.API_CONTEXT}${APIConst.EXPORT_REVENUE_REPORT}`,
-        // "http://localhost:8386/api/v1/report/export-pdf",
         data,
         {
+          responseType: "blob", // Quan trọng: yêu cầu response dạng blob
           headers: {
             Authorization: `Bearer ${access_token}`,
             "Content-Type": "application/json",
@@ -17,10 +19,10 @@ const RevenueReportService = {
         }
       );
 
-      return response.data;
+      return response.data; // Trả về blob data
     } catch (err) {
-      console.log("Export PDF is failed: ", err);
-      return null;
+      console.error("Export PDF failed: ", err);
+      throw err; // Ném lỗi để component xử lý
     }
   },
 };

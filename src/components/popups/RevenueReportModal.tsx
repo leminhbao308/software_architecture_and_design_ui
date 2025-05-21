@@ -119,7 +119,6 @@ const RevenueReportModal: React.FC<Props> = ({ visible, orders, onClose }) => {
   };
 
   const handleExportData = async () => {
-    // Tạo object data để log
     const exportData: ExportDataType = {
       startDate: startDate.format("YYYY-MM-DD"),
       endDate: endDate.format("YYYY-MM-DD"),
@@ -128,18 +127,34 @@ const RevenueReportModal: React.FC<Props> = ({ visible, orders, onClose }) => {
       reportItems: reportData,
     };
 
-    // Log ra console
-    console.log("Dữ liệu xuất:", exportData);
-
     try {
-      const response = await RevenueReportService.exportPDFReport(
+      // Gọi service export PDF
+      const pdfBlob = await RevenueReportService.exportPDFReport(
         token,
         exportData
       );
 
-      console.log("response export pdf: ", response);
-    } catch (err) {
-      console.log("Export PDF is failed: ", err);
+      // Tạo URL tạm thời từ blob
+      const pdfUrl = URL.createObjectURL(pdfBlob);
+
+      // Tạo thẻ a ẩn để trigger download
+      const downloadLink = document.createElement("a");
+      downloadLink.href = pdfUrl;
+      downloadLink.download = `revenue_report_${exportData.startDate}_to_${exportData.endDate}.pdf`;
+
+      // Thêm vào DOM và click
+      document.body.appendChild(downloadLink);
+      downloadLink.click();
+
+      // Dọn dẹp
+      setTimeout(() => {
+        document.body.removeChild(downloadLink);
+        URL.revokeObjectURL(pdfUrl); // Giải phóng bộ nhớ
+      }, 100);
+    } catch (error) {
+      console.error("Export PDF failed:", error);
+      // Hiển thị thông báo lỗi cho người dùng
+      alert("Xuất báo cáo thất bại. Vui lòng thử lại sau.");
     }
   };
 
