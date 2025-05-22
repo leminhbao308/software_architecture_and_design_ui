@@ -153,8 +153,6 @@ const ProductSegment: React.FC<ProductSegmentProps> = (
 
         if (products.length === 0 && !loading) {
             retryInterval = setInterval(() => {
-                // console.log("⏳ Đang tự động thử lại lấy sản phẩm...");
-
                 const tryFetch = async () => {
                     try {
                         setLoading(true);
@@ -193,7 +191,7 @@ const ProductSegment: React.FC<ProductSegmentProps> = (
                 };
 
                 tryFetch();
-            }, 10000); // 10 giây/lần
+            }, 5000); // 10 giây/lần
         }
 
         return () => clearInterval(retryInterval);
