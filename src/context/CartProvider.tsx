@@ -48,7 +48,8 @@ export const CartProvider: React.FC<CartProviderProps> = ({children}) => {
         productId: string,
         productName: string,
         price: number,
-        productThumbnail: string | null
+        productThumbnail: string | null,
+        quantity: number = 1
     ) => {
         setLoading(true);
         try {
@@ -58,7 +59,7 @@ export const CartProvider: React.FC<CartProviderProps> = ({children}) => {
                 productThumbnail,
                 productName,
                 price,
-                quantity: 1
+                quantity
             };
 
             await CartService.addToCart(accessToken, userId, cartItem);

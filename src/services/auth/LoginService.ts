@@ -11,7 +11,6 @@ const LoginService = {
           password,
         }
       );
-      console.log(response);
 
       return response.data; // Trả về dữ liệu từ API
     } catch (error) {
@@ -19,6 +18,19 @@ const LoginService = {
       throw error; // Ném lỗi để xử lý ở component gọi hàm này
     }
   },
+
+    refreshToken: async (refreshToken: string) => {
+        try {
+            const response = await axios.post(
+                `${APIConst.API_CONTEXT}${APIConst.REFRESH_TOKEN}?refresh_token=${refreshToken}`
+            );
+
+            return response.data;
+        } catch (error) {
+            console.error("Refresh token failed:", error);
+            throw error;
+        }
+    }
 };
 
 export default LoginService;

@@ -5,8 +5,8 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import AppRoutes from "./routes/AppRoutes";
 import {UserProvider} from "./context";
 import 'antd/dist/reset.css';
-import CategoryProvider from "./context/CategoryProvider.tsx";
 import CartProvider from "./context/CartProvider.tsx";
+import {CategoryProvider} from "./context/CategoryProvider.tsx";
 
 const App: React.FC = () => {
     return (

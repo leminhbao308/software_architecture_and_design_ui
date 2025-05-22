@@ -16,7 +16,7 @@ const CartComponent: React.FC = () => {
     };
 
     const cartContent = (
-        <div style={{ width: 320 }}>
+        <div style={{width: 450}}>
             <CardContainerCore
                 title="Giỏ hàng"
                 titleStyle={{ fontSize: '18px', alignItems: "center", marginBottom: "0"}}
@@ -37,7 +37,7 @@ const CartComponent: React.FC = () => {
                     </div>
                 ) : (
                     <List
-                        style={{ maxHeight: 320, overflowY: 'auto' }}
+                        style={{maxHeight: 450, overflowY: 'auto'}}
                         itemLayout="horizontal"
                         dataSource={cart && cart.items ? Object.values(cart.items) : []}
                         renderItem={(item) => (

@@ -1,7 +1,32 @@
 import {createContext} from "react";
-import {CategoryContextType} from "../types/CategoryContextType.ts";
+import {CategoryType} from "../types/category/CategoryType";
 
-// Tạo context với giá trị mặc định là undefined
-const CategoryContext = createContext<CategoryContextType | undefined>(undefined);
+interface CategoryContextProps {
+    categories: CategoryType[];
+    setCategories: (categories: CategoryType[]) => void;
+    loading: boolean;
+    setLoading: (loading: boolean) => void;
+    error: string | null;
+    setError: (error: string | null) => void;
+    fetchCategories: (accessToken: string) => Promise<void>;
+}
+
+// Default context value
+const defaultContextValue: CategoryContextProps = {
+    categories: [],
+    setCategories: () => {
+    },
+    loading: false,
+    setLoading: () => {
+    },
+    error: null,
+    setError: () => {
+    },
+    fetchCategories: async () => {
+    }
+};
+
+// Create context
+const CategoryContext = createContext<CategoryContextProps>(defaultContextValue);
 
 export default CategoryContext;
